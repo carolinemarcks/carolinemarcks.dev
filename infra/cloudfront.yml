@@ -1,0 +1,87 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+  RecordSetGroup:
+    Type: AWS::Route53::RecordSetGroup
+    Properties:
+      HostedZoneId: !ImportValue carolinemarcks-dev-HostedZoneId
+      RecordSets:
+        - Name: carolinemarcks.dev
+          Type: A
+          AliasTarget:
+            DNSName: !GetAtt CloudFrontDistribution.DomainName
+            HostedZoneId: Z2FDTNDATAQYW2 # Universal CloudFront Hosted Zone ID
+
+  OriginAccessIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: Access identity between CloudFront and S3 bucket
+
+  CloudFrontS3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref StaticBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              CanonicalUser: !GetAtt OriginAccessIdentity.S3CanonicalUserId
+            Action: 's3:GetObject'
+            Resource: !Sub 'arn:aws:s3:::${StaticBucket}/*'
+
+  StaticBucket:
+    Type: AWS::S3::Bucket
+  
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Comment: !Ref AWS::StackName
+        Origins:
+        - Id: ApiOrigin 
+          # Import the full API Gateway Domain Name from the gateway stack
+          DomainName: 'fl6nuulld3.execute-api.us-east-1.amazonaws.com'
+          OriginPath: '/prod'
+          CustomOriginConfig:
+            HTTPPort: 443
+            OriginProtocolPolicy: https-only
+        - Id: StaticOrigin
+          DomainName: !Sub '${StaticBucket}.s3.amazonaws.com'
+          S3OriginConfig:
+            OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${OriginAccessIdentity}
+        Aliases:
+        - carolinemarcks.dev
+        Enabled: 'true'
+        DefaultRootObject: index.html
+        DefaultCacheBehavior:
+          AllowedMethods: [ 'GET', 'HEAD']
+          TargetOriginId: StaticOrigin
+          Compress: true
+          ForwardedValues:
+            QueryString: true
+          ViewerProtocolPolicy: redirect-to-https
+        CacheBehaviors:
+          - PathPattern: '/api/*'
+            TargetOriginId: ApiOrigin 
+            AllowedMethods:
+              ['GET', 'HEAD', 'DELETE', 'OPTIONS', 'PATCH', 'POST', 'PUT']
+            Compress: true
+            ForwardedValues:
+              QueryString: true
+            ViewerProtocolPolicy: redirect-to-https
+            DefaultTTL: 1
+        PriceClass: PriceClass_100
+        ViewerCertificate:
+          AcmCertificateArn: !ImportValue carolinemarcks-dev-CertificateArn
+          SslSupportMethod: sni-only
+          MinimumProtocolVersion: TLSv1.1_2016
+
+Outputs:
+  StaticBucketName:
+    Description: The name of the static bucket, which hosts the static content for the site
+    Value: !Ref StaticBucket
+    Export:
+      Name: !Sub carolinemarcks-StaticBucketName

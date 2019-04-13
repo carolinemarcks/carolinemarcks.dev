@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Route 53 Hosted Zone for carolinemarcks.dev'
+Resources:
+  DevZone:
+    Type: "AWS::Route53::HostedZone"
+    Properties:
+      HostedZoneConfig:
+        Comment: !Sub Hosted Zone for carolinemarcks.dev
+      Name: carolinemarcks.dev
+
+Outputs:
+  DevZone:
+    Description: carolinemarcks.dev Hosted Zone ID
+    Value: !Ref DevZone
+    Export:
+      Name: carolinemarcks-dev-HostedZoneId

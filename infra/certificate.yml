@@ -1,0 +1,17 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+# ALWAYS CREATE THIS IN US-EAST-1 IF USING WITH CLOUDFRONT! (CloudFront requirement, no matter what region we really use)
+# Note -- this needs to be approved in the certificate manager UI, by creating a Route 53 record.
+Resources:
+  Certificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: carolinemarcks.dev
+      ValidationMethod: DNS
+
+Outputs:
+  Certificate:
+    Description: The arn for the carolinemarcks.dev certificate 
+    Value: !Ref Certificate
+    Export:
+      Name: carolinemarcks-dev-CertificateArn
