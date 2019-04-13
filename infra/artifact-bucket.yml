@@ -1,0 +1,11 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: "Bucket for this project's SAM artifacts"
+Parameters:
+  BucketName:
+    Description: 'Name of bucket to deploy'
+    Type: String
+Resources:
+  DeploymentBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Ref BucketName

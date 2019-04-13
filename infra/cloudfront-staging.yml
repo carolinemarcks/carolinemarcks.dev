@@ -7,7 +7,7 @@ Resources:
     Properties:
       HostedZoneId: !ImportValue carolinemarcks-dev-HostedZoneId
       RecordSets:
-        - Name: carolinemarcks.dev
+        - Name: staging.carolinemarcks.dev
           Type: A
           AliasTarget:
             DNSName: !GetAtt CloudFrontDistribution.DomainName
@@ -35,6 +35,35 @@ Resources:
   StaticBucket:
     Type: AWS::S3::Bucket
   
+  LambdaEdgeAuthFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../packages/edge
+      Handler: auth.handler
+      Role: !GetAtt LambdaEdgeFunctionRole.Arn
+      Runtime: nodejs8.10
+      Timeout: 5
+      # More info at https://github.com/awslabs/serverless-application-model/blob/master/docs/safe_lambda_deployments.rst
+      AutoPublishAlias: live
+
+  LambdaEdgeFunctionRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      Path: '/'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: 'AllowLambdaServiceToAssumeRole'
+            Effect: 'Allow'
+            Action:
+              - 'sts:AssumeRole'
+            Principal:
+              Service:
+                - 'lambda.amazonaws.com'
+                - 'edgelambda.amazonaws.com'
+
   CloudFrontDistribution:
     Type: AWS::CloudFront::Distribution
     Properties:
@@ -44,7 +73,7 @@ Resources:
         - Id: ApiOrigin 
           # TODO Import the full API Gateway Domain Name from the gateway stack
           DomainName: 'fl6nuulld3.execute-api.us-east-1.amazonaws.com'
-          OriginPath: '/prod/api'
+          OriginPath: '/staging/api'
           CustomOriginConfig:
             HTTPPort: 443
             OriginProtocolPolicy: https-only
@@ -53,7 +82,7 @@ Resources:
           S3OriginConfig:
             OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${OriginAccessIdentity}
         Aliases:
-        - carolinemarcks.dev
+        - staging.carolinemarcks.dev
         Enabled: 'true'
         DefaultRootObject: index.html
         DefaultCacheBehavior:
@@ -63,6 +92,11 @@ Resources:
           ForwardedValues:
             QueryString: true
           ViewerProtocolPolicy: redirect-to-https
+          LambdaFunctionAssociations:
+            - EventType: viewer-request
+              # <SAM-Function.Version> provides {FunctionARN}:{Version} which is exactly what Cloudfront expects
+              # SAM Benefit here is upon function changes this function version will also be updated in Cloudfront
+              LambdaFunctionARN: !Ref LambdaEdgeAuthFunction.Version
         CacheBehaviors:
           - PathPattern: '/api/*'
             TargetOriginId: ApiOrigin 
@@ -75,13 +109,13 @@ Resources:
             DefaultTTL: 1
         PriceClass: PriceClass_100
         ViewerCertificate:
-          AcmCertificateArn: !ImportValue carolinemarcks-dev-CertificateArn
+          AcmCertificateArn: !ImportValue carolinemarcks-dev-StagingCertificateArn
           SslSupportMethod: sni-only
           MinimumProtocolVersion: TLSv1.1_2016
 
 Outputs:
-  StaticBucketName:
+  StagingStaticBucketName:
     Description: The name of the static bucket, which hosts the static content for the site
     Value: !Ref StaticBucket
     Export:
-      Name: !Sub carolinemarcks-StaticBucketName
+      Name: !Sub carolinemarcks-StagingStaticBucketName

@@ -8,6 +8,11 @@ Resources:
     Properties:
       DomainName: carolinemarcks.dev
       ValidationMethod: DNS
+  StagingCertificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: staging.carolinemarcks.dev
+      ValidationMethod: DNS
 
 Outputs:
   Certificate:
@@ -15,3 +20,8 @@ Outputs:
     Value: !Ref Certificate
     Export:
       Name: carolinemarcks-dev-CertificateArn
+  StagingCertificate:
+    Description: The arn for the staging.carolinemarcks.dev certificate 
+    Value: !Ref StagingCertificate
+    Export:
+      Name: carolinemarcks-dev-StagingCertificateArn
