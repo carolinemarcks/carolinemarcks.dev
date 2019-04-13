@@ -1,2 +1,4 @@
 node_modules
 dist
+packages/site/generated
+graphql-schema.json

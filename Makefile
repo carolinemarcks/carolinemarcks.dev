@@ -41,9 +41,15 @@ deploy-cloudfront-staging:
 		--no-fail-on-empty-changeset
 
 deploy-site:
+	npm run build:site
 	$(eval BUCKET=$(shell aws cloudformation describe-stacks --stack-name carolinemarcks-cloudfront --region us-east-1 --query "Stacks[].Outputs[?OutputKey=='StaticBucketName'].OutputValue" --output text))
-	aws s3 cp index.html s3://$(BUCKET)/index.html
+	aws s3 sync dist/site s3://$(BUCKET)
+	$(eval CDN_DISTRIBUTION_ID=$(shell aws cloudformation list-stack-resources --stack-name carolinemarcks-cloudfront --query "StackResourceSummaries[?LogicalResourceId=='CloudFrontDistribution'].PhysicalResourceId" --output text))
+	aws cloudfront create-invalidation --distribution-id $(CDN_DISTRIBUTION_ID) --paths "/*"
 
 deploy-site-staging:
+	npm run build:site
 	$(eval STAGING_BUCKET=$(shell aws cloudformation describe-stacks --stack-name carolinemarcks-cloudfront-staging --region us-east-1 --query "Stacks[].Outputs[?OutputKey=='StagingStaticBucketName'].OutputValue" --output text))
-	aws s3 cp index.html s3://$(STAGING_BUCKET)/index.html 
+	aws s3 sync dist/site s3://$(STAGING_BUCKET)
+	$(eval STAGING_CDN_DISTRIBUTION_ID=$(shell aws cloudformation list-stack-resources --stack-name carolinemarcks-cloudfront-staging --query "StackResourceSummaries[?LogicalResourceId=='CloudFrontDistribution'].PhysicalResourceId" --output text))
+	aws cloudfront create-invalidation --distribution-id $(STAGING_CDN_DISTRIBUTION_ID) --paths "/*"
