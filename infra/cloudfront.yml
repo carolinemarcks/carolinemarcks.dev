@@ -44,7 +44,7 @@ Resources:
         - Id: ApiOrigin 
           # TODO Import the full API Gateway Domain Name from the gateway stack
           DomainName: 'fl6nuulld3.execute-api.us-east-1.amazonaws.com'
-          OriginPath: '/prod/api'
+          OriginPath: '/prod'
           CustomOriginConfig:
             HTTPPort: 443
             OriginProtocolPolicy: https-only

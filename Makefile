@@ -29,6 +29,7 @@ deploy-cloudfront:
 		--no-fail-on-empty-changeset
 
 deploy-cloudfront-staging:
+	@echo "MAKE SURE YOU UPDATE THE USERNAME AND PASSWORD IN auth.js, BUT DON'T COMMIT IT"
 	sam package \
 		--template-file infra/cloudfront-staging.yml \
 		--s3-bucket carolinemarcks-artifact-bucket \
