@@ -16,10 +16,7 @@ exports.handler = (event, context, callback) => {
     const request = event.Records[0].cf.request;
     const headers = request.headers;
  
-    // NOTE - DO NOT COMMIT THIS WITH REAL CREDENTIALS
-    // Lambda@Edge does not support env vars, so we just have to remember to update this before deploying
-    // We *could* make a network request to resolve the var, but would cost $$ so it's not worth it atm
-    const authString = 'Basic ' + new Buffer('').toString('base64');
+    const authString = 'Basic ' + new Buffer(process.env.AUTH_STRING).toString('base64');
  
     // Require Basic authentication
     if (typeof headers.authorization == 'undefined' || headers.authorization[0].value != authString) {

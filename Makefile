@@ -29,8 +29,16 @@ __set-prod:
 	$(eval DOMAIN_NAME=carolinemarcks.dev)
 	$(eval CERTIFICATE_IMPORT=carolinemarcks-dev-CertificateArn)
 
+__has_auth_string:
+	@ if [ -z $(AUTH_STRING) ]; then \
+		echo "AUTH_STRING variable not set"; \
+		exit 1; \
+	fi
+
+__build_edge:  __has_auth_string
+	@AUTH_STRING=$(AUTH_STRING) npm run build:edge
+
 __deploy-cloudfront:
-	@echo "MAKE SURE YOU UPDATE THE USERNAME AND PASSWORD IN auth.js, BUT DON'T COMMIT IT"
 	sam package \
 		--template-file infra/cloudfront.yml \
 		--s3-bucket carolinemarcks-artifact-bucket \
@@ -69,7 +77,7 @@ deploy-api-staging: __set-staging __deploy-api
 
 deploy-cloudfront-prod: __set-prod __deploy-cloudfront
 
-deploy-cloudfront-staging: __set-staging __deploy-cloudfront
+deploy-cloudfront-staging: __set-staging __build_edge __deploy-cloudfront
 
 deploy-site-prod: __set-prod __deploy-site
 

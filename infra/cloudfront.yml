@@ -56,7 +56,7 @@ Resources:
     Type: AWS::Serverless::Function
     Condition: IsStaging
     Properties:
-      CodeUri: ../packages/edge
+      CodeUri: ../dist/edge
       Handler: auth.handler
       Role: !GetAtt LambdaEdgeFunctionRole.Arn
       Runtime: nodejs8.10

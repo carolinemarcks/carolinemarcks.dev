@@ -6,8 +6,9 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build:site": "webpack --mode production --config webpack.site.config.js",
-    "build:api": "webpack --mode production --config webpack.api.config.js"
+    "build:api": "webpack --mode production --config webpack.api.config.js",
+    "build:edge": "webpack --mode production --config webpack.edge.config.js",
+    "build:site": "webpack --mode production --config webpack.site.config.js"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.23",
