@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
+const CleanWebpackPlugin = require("clean-webpack-plugin");
 const webpack = require('webpack');
 
 const htmlWebpackPlugin = new HtmlWebPackPlugin({
@@ -49,7 +50,7 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
-  plugins: [htmlWebpackPlugin, definePlugin],
+  plugins: [new CleanWebpackPlugin(), htmlWebpackPlugin, definePlugin],
   devServer: {
     historyApiFallback: true,
   },
