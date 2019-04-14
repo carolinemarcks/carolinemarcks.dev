@@ -6,9 +6,16 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build:api": "webpack --mode production --config webpack.api.config.js",
-    "build:edge": "webpack --mode production --config webpack.edge.config.js",
-    "build:site": "webpack --mode production --config webpack.site.config.js"
+    "api:clean": "rm -rf packages/api/generated && mkdir packages/api/generated",
+    "api:generate": "graphqlgen",
+    "api:build": "webpack --mode production --config webpack.api.config.js",
+    "api": "yarn api:clean && yarn api:generate && yarn api:build",
+    "edge": "webpack --mode production --config webpack.edge.config.js",
+    "site:clean": "rm -rf packages/site/generated && mkdir packages/site/generated",
+    "site:schema:download": "apollo schema:download --endpoint=https://carolinemarcks.dev/api/graphql  graphql-schema.json",
+    "site:generate": "apollo codegen:generate --localSchemaFile=graphql-schema.json --target=typescript --includes=packages/site/queries.ts --tagName=gql --addTypename --outputFlat ./packages/site/generated",
+    "site:build": "webpack --mode production --config webpack.site.config.js",
+    "site": "yarn site:clean && yarn site:schema:download && yarn site:generate && yarn site:build"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.23",
@@ -61,12 +68,15 @@
     "axios": "^0.18.0",
     "dataloader": "^1.4.0",
     "font-awesome": "^4.7.0",
-    "graphql": "^0.13.0",
+    "graphql": "^14.2.1",
     "graphql-tag": "^2.10.1",
     "normalize.css": "^8.0.1",
     "react": "^16.6.3",
     "react-apollo": "^2.5.3",
     "react-dom": "^16.6.3",
     "react-router-dom": "^4.3.1"
+  },
+  "resolutions": {
+    "apollo/**/graphql": "14.2.1"
   }
 }

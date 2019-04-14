@@ -1,0 +1,7 @@
+# this is just for the 'api' package but has to be in this directory and named graphqlgen
+language: typescript
+schema: ./packages/api/typeDefs.graphql
+models:
+  files:
+    - ./packages/api/models.ts
+output: ./packages/api/generated/graphqlgen.ts

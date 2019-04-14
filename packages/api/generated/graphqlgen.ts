@@ -2,7 +2,6 @@
 
 import { GraphQLResolveInfo } from 'graphql';
 import { User, Track, Artist, Image } from '../models';
-
 type Context = any;
 
 export namespace QueryResolvers {
