@@ -23,13 +23,13 @@ __typecheck:
 __set-staging:
 	$(eval CLOUDFRONT_STACK=carolinemarcks-cloudfront-staging)
 	$(eval API_STACK=carolinemarcks-api-staging)
-	$(eval DOMAIN_NAME=staging.carolinemarcks.dev)
+	$(eval DOMAIN_NAME=https://staging.carolinemarcks.dev)
 	$(eval CERTIFICATE_IMPORT=carolinemarcks-dev-StagingCertificateArn)
 
 __set-prod:
 	$(eval CLOUDFRONT_STACK=carolinemarcks-cloudfront)
 	$(eval API_STACK=carolinemarcks-api)
-	$(eval DOMAIN_NAME=carolinemarcks.dev)
+	$(eval DOMAIN_NAME=https://carolinemarcks.dev)
 	$(eval CERTIFICATE_IMPORT=carolinemarcks-dev-CertificateArn)
 
 __has_auth_string:
