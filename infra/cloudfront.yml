@@ -129,6 +129,10 @@ Resources:
             QueryString: true
           ViewerProtocolPolicy: redirect-to-https
           DefaultTTL: 0
+        CustomErrorResponses:
+          - ErrorCode: 403
+            ResponseCode: 200
+            ResponsePagePath: '/index.html'
         PriceClass: PriceClass_100
         ViewerCertificate:
           AcmCertificateArn:

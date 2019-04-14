@@ -15,7 +15,8 @@ const definePlugin = new webpack.DefinePlugin({
 module.exports = {
   entry: './packages/site/App.tsx',
   output: {
-    path: path.resolve(__dirname, 'dist/site')
+    path: path.resolve(__dirname, 'dist/site'),
+    publicPath: '/'
   },
   module: {
     rules: [
