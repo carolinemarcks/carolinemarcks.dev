@@ -9,7 +9,7 @@ export interface NotFoundProps {
   location: Location;
 }
 
-const NotFound = ({ location }: NotFoundProps) => (
+const NotFound = ({ location }: NotFoundProps): JSX.Element => (
   <Main>
     <article className="post" id="index">
       <div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import Main from '../components/Main';
 
-const Index = () => (
+const Index = (): JSX.Element => (
   <Main>
     <article className="post" id="index">
       <header>

@@ -2,12 +2,14 @@ import DataLoader from 'dataloader';
 import lastFm from './lastfm';
 import { ArtistDetail, Track } from './models';
 
-const topTrackLoader: DataLoader<string, Track[]> = new DataLoader(usernames =>
-  Promise.all(usernames.map(username => lastFm.getTopTracksForUser(username))),
+const topTrackLoader: DataLoader<string, Track[]> = new DataLoader(
+  (usernames: string[]): Promise<Track[][]> =>
+    Promise.all(usernames.map((username: string): Promise<Track[]> => lastFm.getTopTracksForUser(username))),
 );
 
-const artistLoader: DataLoader<string, ArtistDetail> = new DataLoader(artists =>
-  Promise.all(artists.map(artist => lastFm.getArtistInfo(artist))),
+const artistLoader: DataLoader<string, ArtistDetail> = new DataLoader(
+  (artists: string[]): Promise<ArtistDetail[]> =>
+    Promise.all(artists.map((artist: string): Promise<ArtistDetail> => lastFm.getArtistInfo(artist))),
 );
 
 export default {

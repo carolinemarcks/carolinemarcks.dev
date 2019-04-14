@@ -6,10 +6,12 @@ interface Environment {
   lastfmKey: string;
 }
 
-export const environment: Environment = {
+const environment: Environment = {
   apollo: {
     introspection: process.env.APOLLO_INTROSPECTION === 'true',
     playground: process.env.APOLLO_PLAYGROUND === 'true',
   },
   lastfmKey: process.env.LASTFM_API_KEY || '',
 };
+
+export default environment;

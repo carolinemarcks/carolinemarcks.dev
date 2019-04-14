@@ -18,7 +18,7 @@ deploy-certificates:
 		--no-fail-on-empty-changeset
 
 __typecheck:
-	yarn tsc
+	yarn tsc --noEmit
 
 __set-staging:
 	$(eval CLOUDFRONT_STACK=carolinemarcks-cloudfront-staging)

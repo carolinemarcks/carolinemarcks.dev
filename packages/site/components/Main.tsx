@@ -4,7 +4,7 @@ export interface MainProps {
   children: ReactNode;
 }
 
-const Main = ({ children }: MainProps) => (
+const Main = ({ children }: MainProps): JSX.Element => (
   <div id="wrapper">
     <div id="main">{children}</div>
   </div>

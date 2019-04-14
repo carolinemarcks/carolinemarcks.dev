@@ -15,7 +15,17 @@
     "site:schema:download": "apollo schema:download --endpoint=https://carolinemarcks.dev/api/graphql  graphql-schema.json",
     "site:generate": "apollo codegen:generate --localSchemaFile=graphql-schema.json --target=typescript --includes=packages/site/queries.ts --tagName=gql --addTypename --outputFlat ./packages/site/generated",
     "site:build": "webpack --mode production --config webpack.site.config.js",
-    "site": "yarn site:clean && yarn site:schema:download && yarn site:generate && yarn site:build"
+    "site": "yarn site:clean && yarn site:schema:download && yarn site:generate && yarn site:build",
+    "lint": "eslint packages/ --ext .js,.jsx,.tsx,.ts"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "yarn lint && tsc --noEmit"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": ["eslint --fix", "git add"]
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.23",

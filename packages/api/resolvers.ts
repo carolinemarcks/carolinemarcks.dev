@@ -1,11 +1,12 @@
 import { ArtistResolvers, ImageResolvers, QueryResolvers, TrackResolvers, UserResolvers } from './generated/graphqlgen';
 import loaders from './loaders';
-import { Artist, Image, Track, User } from './models';
+import { Artist, Image, Track, User, ArtistDetail } from './models';
 
 export default {
   Artist: {
     ...ArtistResolvers.defaultResolvers,
-    image: (parent: Artist) => loaders.artistLoader.load(parent.name).then(ad => ad.image),
+    image: (parent: Artist): Promise<Image[]> =>
+      loaders.artistLoader.load(parent.name).then((ad: ArtistDetail): Image[] => ad.image),
   },
   Image: {
     ...ImageResolvers.defaultResolvers,

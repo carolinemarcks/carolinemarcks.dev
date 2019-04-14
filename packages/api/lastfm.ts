@@ -1,12 +1,12 @@
 import axios from 'axios';
-import { environment } from './environment';
+import environment from './environment';
 import { ArtistDetail, Track } from './models';
 
 const { lastfmKey } = environment;
 
 const instance = axios.create();
 
-const get = (params: { [param: string]: string }) =>
+const get = <T>(params: { [param: string]: string }): Promise<T> =>
   instance
     .request({
       method: 'get',
@@ -17,16 +17,19 @@ const get = (params: { [param: string]: string }) =>
       },
       url: 'http://ws.audioscrobbler.com/2.0/',
     })
-    .then(({ data }) => (data.error ? Promise.reject(data.message) : data), err => Promise.reject(err.message));
+    .then(
+      ({ data }): Promise<T> => (data.error ? Promise.reject(data.message) : Promise.resolve(data)),
+      (err): Promise<T> => Promise.reject(err.message),
+    );
 
 const getTopTracksForUser = (user: string): Promise<Track[]> =>
-  get({
+  get<{ toptracks: { track: Track[] } }>({
     method: 'user.getTopTracks',
     user,
-  }).then(({ toptracks }) => toptracks.track);
+  }).then(({ toptracks }): Track[] => toptracks.track);
 
 const getArtistInfo = (artist: string): Promise<ArtistDetail> =>
-  get({ artist, method: 'artist.getInfo' }).then(data => data.artist);
+  get<{ artist: ArtistDetail }>({ artist, method: 'artist.getInfo' }).then((data): ArtistDetail => data.artist);
 
 export default {
   getArtistInfo,

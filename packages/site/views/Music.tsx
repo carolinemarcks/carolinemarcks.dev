@@ -1,12 +1,36 @@
 import React from 'react';
-import { Query } from 'react-apollo';
+import { Query, QueryResult } from 'react-apollo';
 import Main from '../components/Main';
-import { topTracks } from '../queries';
-import { TopTracks, TopTracks_user_topTracks } from '../generated/TopTracks';
+import topTracks from '../queries';
+import { TopTracks, TopTracks_user, TopTracks_user_topTracks_image } from '../generated/TopTracks';
 
 class TopTracksQuery extends Query<TopTracks> {}
 
-const Music = () => (
+const Loading = (): JSX.Element => <p>Loading ...</p>;
+const Error = (): JSX.Element => (
+  <p>
+    Couldn&apos;t load my top tracks. Check me out on <a href="https://www.last.fm/user/cmarcksthespot">last.fm</a>{' '}
+    instead
+  </p>
+);
+
+const Tracks = ({ user }: { user: TopTracks_user }): JSX.Element => (
+  <div>
+    {user.topTracks
+      .reduce<{ alt: string; src: string }[]>((accum, track): { alt: string; src: string }[] => {
+        const image = track.image.find((i: TopTracks_user_topTracks_image): boolean => i.size === 'extralarge');
+        if (!image) return accum;
+        return [...accum, { alt: track.name, src: image.url }];
+      }, [])
+      .map(
+        ({ alt, src }): JSX.Element => (
+          <img key={alt} src={src} alt={alt} />
+        ),
+      )}
+  </div>
+);
+
+const Music = (): JSX.Element => (
   <Main>
     <article className="post" id="index">
       <header>
@@ -15,23 +39,10 @@ const Music = () => (
         </div>
       </header>
       <TopTracksQuery query={topTracks}>
-        {({ loading, error, data }) => {
-          if (loading) return <p>Loading...</p>;
-          if (error || !data || !data.user) {
-            return (
-              <p>
-                Couldn&apos;t load my top tracks. Check me out on{' '}
-                <a href="https://www.last.fm/user/cmarcksthespot">last.fm</a> instead
-              </p>
-            );
-          }
-          return data.user.topTracks
-            .reduce<{ alt: string; src: string }[]>((accum, track) => {
-              const image = track.image.find(i => i.size === 'extralarge');
-              if (!image) return accum;
-              return [...accum, { alt: track.name, src: image.url }];
-            }, [])
-            .map(({ alt, src }) => <img key={alt} src={src} alt={alt} />);
+        {({ loading, error, data }: QueryResult<TopTracks>): JSX.Element => {
+          if (loading) return <Loading />;
+          if (error || !data || !data.user) return <Error />;
+          return <Tracks user={data.user} />;
         }}
       </TopTracksQuery>
     </article>

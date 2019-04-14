@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-export const topTracks = gql`
+const topTracks = gql`
   query TopTracks {
     user(name: "cmarcksthespot") {
       topTracks {
@@ -13,3 +13,5 @@ export const topTracks = gql`
     }
   }
 `;
+
+export default topTracks;
