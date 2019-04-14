@@ -1,13 +1,30 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-
+Parameters:
+  DomainName:
+    Description: The domain being deployed
+    Type: String
+    AllowedValues:
+      - carolinemarcks.dev
+      - staging.carolinemarcks.dev
+  GatewayDomainNameImport:
+    Description: The Name of the import for the domain of the gateway eg xyz.execute-api.us-east-1.amazonaws.com
+    Type: String
+  CertificateArnImport:
+    Description: The name of the import for the ceritificate
+    Type: String
+    AllowedValues:
+      - carolinemarcks-dev-CertificateArn
+      - carolinemarcks-dev-StagingCertificateArn
+Conditions:
+  IsStaging: !Equals ['staging.carolinemarcks.dev', !Ref DomainName]
 Resources:
   RecordSetGroup:
     Type: AWS::Route53::RecordSetGroup
     Properties:
       HostedZoneId: !ImportValue carolinemarcks-dev-HostedZoneId
       RecordSets:
-        - Name: carolinemarcks.dev
+        - Name: !Ref DomainName
           Type: A
           AliasTarget:
             DNSName: !GetAtt CloudFrontDistribution.DomainName
@@ -34,15 +51,47 @@ Resources:
 
   StaticBucket:
     Type: AWS::S3::Bucket
-  
+
+  LambdaEdgeAuthFunction:
+    Type: AWS::Serverless::Function
+    Condition: IsStaging
+    Properties:
+      CodeUri: ../packages/edge
+      Handler: auth.handler
+      Role: !GetAtt LambdaEdgeFunctionRole.Arn
+      Runtime: nodejs8.10
+      Timeout: 5
+      # More info at https://github.com/awslabs/serverless-application-model/blob/master/docs/safe_lambda_deployments.rst
+      AutoPublishAlias: live
+
+  LambdaEdgeFunctionRole:
+    Type: 'AWS::IAM::Role'
+    Condition: IsStaging
+    Properties:
+      Path: '/'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: 'AllowLambdaServiceToAssumeRole'
+            Effect: 'Allow'
+            Action:
+              - 'sts:AssumeRole'
+            Principal:
+              Service:
+                - 'lambda.amazonaws.com'
+                - 'edgelambda.amazonaws.com'
+
   CloudFrontDistribution:
     Type: AWS::CloudFront::Distribution
     Properties:
       DistributionConfig:
         Comment: !Ref AWS::StackName
         Origins:
-        - Id: ApiOrigin 
-          DomainName: !ImportValue carolinemarcks-GatewayDomainName 
+        - Id: ApiOrigin
+          DomainName:
+            Fn::ImportValue: !Ref GatewayDomainNameImport
           OriginPath: '/prod'
           CustomOriginConfig:
             HTTPPort: 443
@@ -52,7 +101,7 @@ Resources:
           S3OriginConfig:
             OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${OriginAccessIdentity}
         Aliases:
-        - carolinemarcks.dev
+        - !Ref DomainName
         Enabled: 'true'
         DefaultRootObject: index.html
         DefaultCacheBehavior:
@@ -62,19 +111,28 @@ Resources:
           ForwardedValues:
             QueryString: true
           ViewerProtocolPolicy: redirect-to-https
+          LambdaFunctionAssociations: !If
+          - IsStaging
+          -
+            - EventType: viewer-request
+              # <SAM-Function.Version> provides {FunctionARN}:{Version} which is exactly what Cloudfront expects
+              # SAM Benefit here is upon function changes this function version will also be updated in Cloudfront
+              LambdaFunctionARN: !Ref LambdaEdgeAuthFunction.Version
+          - []
         CacheBehaviors:
-          - PathPattern: '/api/*'
-            TargetOriginId: ApiOrigin 
-            AllowedMethods:
-              ['GET', 'HEAD', 'DELETE', 'OPTIONS', 'PATCH', 'POST', 'PUT']
-            Compress: true
-            ForwardedValues:
-              QueryString: true
-            ViewerProtocolPolicy: redirect-to-https
-            DefaultTTL: 0
+        - PathPattern: '/api/*'
+          TargetOriginId: ApiOrigin
+          AllowedMethods:
+            ['GET', 'HEAD', 'DELETE', 'OPTIONS', 'PATCH', 'POST', 'PUT']
+          Compress: true
+          ForwardedValues:
+            QueryString: true
+          ViewerProtocolPolicy: redirect-to-https
+          DefaultTTL: 0
         PriceClass: PriceClass_100
         ViewerCertificate:
-          AcmCertificateArn: !ImportValue carolinemarcks-dev-CertificateArn
+          AcmCertificateArn:
+            Fn::ImportValue: !Ref CertificateArnImport
           SslSupportMethod: sni-only
           MinimumProtocolVersion: TLSv1.1_2016
 
@@ -83,4 +141,4 @@ Outputs:
     Description: The name of the static bucket, which hosts the static content for the site
     Value: !Ref StaticBucket
     Export:
-      Name: !Sub carolinemarcks-StaticBucketName
+      Name: !Sub '${AWS::StackName}-StaticBucketName'

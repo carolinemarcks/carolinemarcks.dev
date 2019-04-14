@@ -19,7 +19,7 @@ Resources:
     Properties:
       CodeUri: "../dist/api"
       Handler: lambda.handler
-      FunctionName: carolinemarcks-api-graph
+      FunctionName: !Sub '${AWS::StackName}-graph'
       Environment:
         Variables:
           LASTFM_API_KEY:
@@ -40,4 +40,4 @@ Outputs:
     Description: A string, in the shape of 'q3f67x5e29.execute-api.us-east-1.amazonaws.com', to be used by CloudFront as the DomainName
     Value: !Sub '${Api}.execute-api.${AWS::Region}.amazonaws.com'
     Export:
-      Name: !Sub carolinemarcks-GatewayDomainName
+      Name: !Sub '${AWS::StackName}-GatewayDomainName'

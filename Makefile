@@ -17,30 +17,42 @@ deploy-certificates:
 		--stack-name carolinemarcks-certificate \
 		--no-fail-on-empty-changeset
 
-deploy-cloudfront:
+__set-staging:
+	$(eval CLOUDFRONT_STACK=carolinemarcks-cloudfront-staging)
+	$(eval API_STACK=carolinemarcks-api-staging)
+	$(eval DOMAIN_NAME=staging.carolinemarcks.dev)
+	$(eval CERTIFICATE_IMPORT=carolinemarcks-dev-StagingCertificateArn)
+
+__set-prod:
+	$(eval CLOUDFRONT_STACK=carolinemarcks-cloudfront)
+	$(eval API_STACK=carolinemarcks-api)
+	$(eval DOMAIN_NAME=carolinemarcks.dev)
+	$(eval CERTIFICATE_IMPORT=carolinemarcks-dev-CertificateArn)
+
+__deploy-cloudfront:
+	@echo "MAKE SURE YOU UPDATE THE USERNAME AND PASSWORD IN auth.js, BUT DON'T COMMIT IT"
 	sam package \
 		--template-file infra/cloudfront.yml \
 		--s3-bucket carolinemarcks-artifact-bucket \
 		--output-template-file dist/packaged-cloudfront.yml
 	aws cloudformation deploy \
 		--template-file dist/packaged-cloudfront.yml \
-		--stack-name carolinemarcks-cloudfront \
+		--stack-name $(CLOUDFRONT_STACK) \
+		--parameter-overrides \
+			DomainName=$(DOMAIN_NAME) \
+			CertificateArnImport=$(CERTIFICATE_IMPORT) \
+			GatewayDomainNameImport=$(API_STACK)-GatewayDomainName \
 		--capabilities CAPABILITY_IAM \
 		--no-fail-on-empty-changeset
 
-deploy-cloudfront-staging:
-	@echo "MAKE SURE YOU UPDATE THE USERNAME AND PASSWORD IN auth.js, BUT DON'T COMMIT IT"
-	sam package \
-		--template-file infra/cloudfront-staging.yml \
-		--s3-bucket carolinemarcks-artifact-bucket \
-		--output-template-file dist/packaged-cloudfront-staging.yml
-	aws cloudformation deploy \
-		--template-file dist/packaged-cloudfront-staging.yml \
-		--stack-name carolinemarcks-cloudfront-staging \
-		--capabilities CAPABILITY_IAM \
-		--no-fail-on-empty-changeset
+__deploy-site:
+	DOMAIN_NAME=$(DOMAIN_NAME) npm run build:site
+	$(eval BUCKET=$(shell aws cloudformation list-stack-resources --stack-name $(CLOUDFRONT_STACK) --query "StackResourceSummaries[?LogicalResourceId=='StaticBucket'].PhysicalResourceId" --output text))
+	aws s3 sync dist/site s3://$(BUCKET)
+	$(eval CDN_DISTRIBUTION_ID=$(shell aws cloudformation list-stack-resources --stack-name $(CLOUDFRONT_STACK) --query "StackResourceSummaries[?LogicalResourceId=='CloudFrontDistribution'].PhysicalResourceId" --output text))
+	aws cloudfront create-invalidation --distribution-id $(CDN_DISTRIBUTION_ID) --paths "/*"
 
-deploy-api: 
+__deploy-api:
 	npm run build:api
 	sam package \
 		--template-file infra/api.yml \
@@ -51,16 +63,14 @@ deploy-api:
 		--stack-name carolinemarcks-api \
 		--capabilities CAPABILITY_IAM
 
-deploy-site:
-	npm run build:site
-	$(eval BUCKET=$(shell aws cloudformation describe-stacks --stack-name carolinemarcks-cloudfront --region us-east-1 --query "Stacks[].Outputs[?OutputKey=='StaticBucketName'].OutputValue" --output text))
-	aws s3 sync dist/site s3://$(BUCKET)
-	$(eval CDN_DISTRIBUTION_ID=$(shell aws cloudformation list-stack-resources --stack-name carolinemarcks-cloudfront --query "StackResourceSummaries[?LogicalResourceId=='CloudFrontDistribution'].PhysicalResourceId" --output text))
-	aws cloudfront create-invalidation --distribution-id $(CDN_DISTRIBUTION_ID) --paths "/*"
+deploy-api-prod: __set-prod __deploy-api
 
-deploy-site-staging:
-	npm run build:site
-	$(eval STAGING_BUCKET=$(shell aws cloudformation describe-stacks --stack-name carolinemarcks-cloudfront-staging --region us-east-1 --query "Stacks[].Outputs[?OutputKey=='StagingStaticBucketName'].OutputValue" --output text))
-	aws s3 sync dist/site s3://$(STAGING_BUCKET)
-	$(eval STAGING_CDN_DISTRIBUTION_ID=$(shell aws cloudformation list-stack-resources --stack-name carolinemarcks-cloudfront-staging --query "StackResourceSummaries[?LogicalResourceId=='CloudFrontDistribution'].PhysicalResourceId" --output text))
-	aws cloudfront create-invalidation --distribution-id $(STAGING_CDN_DISTRIBUTION_ID) --paths "/*"
+deploy-api-staging: __set-staging __deploy-api
+
+deploy-cloudfront-prod: __set-prod __deploy-cloudfront
+
+deploy-cloudfront-staging: __set-staging __deploy-cloudfront
+
+deploy-site-prod: __set-prod __deploy-site
+
+deploy-site-staging: __set-staging __deploy-site

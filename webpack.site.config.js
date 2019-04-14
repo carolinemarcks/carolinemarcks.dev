@@ -1,10 +1,15 @@
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
 
 const htmlWebpackPlugin = new HtmlWebPackPlugin({
   favicon: 'packages/site/static/images/favicon.ico',
   template: './index.html',
   filename: './index.html',
+});
+
+const definePlugin = new webpack.DefinePlugin({
+  'process.env.DOMAIN_NAME': JSON.stringify(process.env.DOMAIN_NAME)
 });
 
 module.exports = {
@@ -43,7 +48,7 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
-  plugins: [htmlWebpackPlugin],
+  plugins: [htmlWebpackPlugin, definePlugin],
   devServer: {
     historyApiFallback: true,
   },

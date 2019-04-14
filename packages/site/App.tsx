@@ -8,13 +8,13 @@ import About from './views/About';
 import Index from './views/Index';
 import Music from './views/Music';
 import NotFound from './views/NotFound';
+import { environment } from "./environment";
 
 require('./static/css/main.scss');
 require('./static/images/ctm-resume.pdf');
 
 const client = new ApolloClient({
-  // TODO replace wth dynaming rendering b/c of cors
-  uri: 'https://staging.carolinemarcks.dev/api/graphql',
+  uri: environment.apiUri
 });
 
 const AppRouter = () => (
