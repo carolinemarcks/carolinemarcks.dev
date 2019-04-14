@@ -36,7 +36,7 @@ __has_auth_string:
 	fi
 
 __build_edge:  __has_auth_string
-	@AUTH_STRING=$(AUTH_STRING) npm run build:edge
+	@AUTH_STRING=$(AUTH_STRING) yarn build:edge
 
 __deploy-cloudfront:
 	sam package \
@@ -54,14 +54,14 @@ __deploy-cloudfront:
 		--no-fail-on-empty-changeset
 
 __deploy-site:
-	DOMAIN_NAME=$(DOMAIN_NAME) npm run build:site
+	DOMAIN_NAME=$(DOMAIN_NAME) yarn build:site
 	$(eval BUCKET=$(shell aws cloudformation list-stack-resources --stack-name $(CLOUDFRONT_STACK) --query "StackResourceSummaries[?LogicalResourceId=='StaticBucket'].PhysicalResourceId" --output text))
 	aws s3 sync dist/site s3://$(BUCKET)
 	$(eval CDN_DISTRIBUTION_ID=$(shell aws cloudformation list-stack-resources --stack-name $(CLOUDFRONT_STACK) --query "StackResourceSummaries[?LogicalResourceId=='CloudFrontDistribution'].PhysicalResourceId" --output text))
 	aws cloudfront create-invalidation --distribution-id $(CDN_DISTRIBUTION_ID) --paths "/*"
 
 __deploy-api:
-	npm run build:api
+	yarn build:api
 	sam package \
 		--template-file infra/api.yml \
 		--s3-bucket carolinemarcks-artifact-bucket \
