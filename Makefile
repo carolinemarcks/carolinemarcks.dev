@@ -17,6 +17,9 @@ deploy-certificates:
 		--stack-name carolinemarcks-certificate \
 		--no-fail-on-empty-changeset
 
+__typecheck:
+	yarn tsc
+
 __set-staging:
 	$(eval CLOUDFRONT_STACK=carolinemarcks-cloudfront-staging)
 	$(eval API_STACK=carolinemarcks-api-staging)
@@ -35,7 +38,7 @@ __has_auth_string:
 		exit 1; \
 	fi
 
-__build_edge:  __has_auth_string
+__build_edge:  __typecheck __has_auth_string
 	@AUTH_STRING=$(AUTH_STRING) yarn edge
 
 __deploy-cloudfront:
@@ -53,14 +56,14 @@ __deploy-cloudfront:
 		--capabilities CAPABILITY_IAM \
 		--no-fail-on-empty-changeset
 
-__deploy-site:
+__deploy-site: __typecheck
 	DOMAIN_NAME=$(DOMAIN_NAME) yarn site
 	$(eval BUCKET=$(shell aws cloudformation list-stack-resources --stack-name $(CLOUDFRONT_STACK) --query "StackResourceSummaries[?LogicalResourceId=='StaticBucket'].PhysicalResourceId" --output text))
 	aws s3 sync dist/site s3://$(BUCKET)
 	$(eval CDN_DISTRIBUTION_ID=$(shell aws cloudformation list-stack-resources --stack-name $(CLOUDFRONT_STACK) --query "StackResourceSummaries[?LogicalResourceId=='CloudFrontDistribution'].PhysicalResourceId" --output text))
 	aws cloudfront create-invalidation --distribution-id $(CDN_DISTRIBUTION_ID) --paths "/*"
 
-__deploy-api:
+__deploy-api: __typecheck
 	yarn api
 	sam package \
 		--template-file infra/api.yml \
