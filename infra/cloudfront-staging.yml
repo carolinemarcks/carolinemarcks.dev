@@ -71,9 +71,8 @@ Resources:
         Comment: !Ref AWS::StackName
         Origins:
         - Id: ApiOrigin 
-          # TODO Import the full API Gateway Domain Name from the gateway stack
-          DomainName: 'fl6nuulld3.execute-api.us-east-1.amazonaws.com'
-          OriginPath: '/staging/api'
+          DomainName: !ImportValue carolinemarcks-GatewayDomainName 
+          OriginPath: '/prod'
           CustomOriginConfig:
             HTTPPort: 443
             OriginProtocolPolicy: https-only
@@ -106,7 +105,7 @@ Resources:
             ForwardedValues:
               QueryString: true
             ViewerProtocolPolicy: redirect-to-https
-            DefaultTTL: 1
+            DefaultTTL: 0
         PriceClass: PriceClass_100
         ViewerCertificate:
           AcmCertificateArn: !ImportValue carolinemarcks-dev-StagingCertificateArn

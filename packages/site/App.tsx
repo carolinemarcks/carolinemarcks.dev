@@ -13,7 +13,8 @@ require('./static/css/main.scss');
 require('./static/images/ctm-resume.pdf');
 
 const client = new ApolloClient({
-  uri: 'https://fl6nuulld3.execute-api.us-east-1.amazonaws.com/prod/graphql',
+  // TODO replace wth dynaming rendering b/c of cors
+  uri: 'https://staging.carolinemarcks.dev/api/graphql',
 });
 
 const AppRouter = () => (

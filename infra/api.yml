@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Parameters:
+  LastFmApiKey:
+    Type: String
+    Description: API key for lastfm access
+Resources:
+  Api:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      EndpointConfiguration: REGIONAL
+      MethodSettings:
+      - LoggingLevel: INFO
+        ResourcePath: "/*"
+        HttpMethod: "*"
+  GraphQL:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: "../dist/api"
+      Handler: lambda.handler
+      FunctionName: carolinemarcks-api-graph
+      Environment:
+        Variables:
+          LASTFM_API_KEY:
+            Ref: LastFmApiKey
+          APOLLO_PLAYGROUND: 'true'
+          APOLLO_INTROSPECTION: 'true'
+      Runtime: nodejs8.10
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: Api
+            Path: "/api/graphql"
+            Method: ANY
+Outputs:
+  GatewayDomainName:
+    Description: A string, in the shape of 'q3f67x5e29.execute-api.us-east-1.amazonaws.com', to be used by CloudFront as the DomainName
+    Value: !Sub '${Api}.execute-api.${AWS::Region}.amazonaws.com'
+    Export:
+      Name: !Sub carolinemarcks-GatewayDomainName

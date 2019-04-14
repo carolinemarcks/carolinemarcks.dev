@@ -1,0 +1,24 @@
+type Query {
+  user(name: String!): User
+}
+
+type User {
+  name: String!
+  topTracks: [Track!]!
+}
+
+type Artist {
+  name: String!
+  image: [Image!]!
+}
+
+type Image {
+  url: String!
+  size: String!
+}
+
+type Track {
+  name: String!
+  artist: Artist!
+  image: [Image!]!
+}

@@ -40,6 +40,17 @@ deploy-cloudfront-staging:
 		--capabilities CAPABILITY_IAM \
 		--no-fail-on-empty-changeset
 
+deploy-api: 
+	npm run build:api
+	sam package \
+		--template-file infra/api.yml \
+		--s3-bucket carolinemarcks-artifact-bucket \
+		--output-template-file dist/packaged-api.yml
+	aws cloudformation deploy \
+		--template-file dist/packaged-api.yml \
+		--stack-name carolinemarcks-api \
+		--capabilities CAPABILITY_IAM
+
 deploy-site:
 	npm run build:site
 	$(eval BUCKET=$(shell aws cloudformation describe-stacks --stack-name carolinemarcks-cloudfront --region us-east-1 --query "Stacks[].Outputs[?OutputKey=='StaticBucketName'].OutputValue" --output text))
