@@ -1,4 +1,4 @@
-interface IEnvironment {
+interface Environment {
   apollo: {
     introspection: boolean;
     playground: boolean;
@@ -6,10 +6,10 @@ interface IEnvironment {
   lastfmKey: string;
 }
 
-export const environment: IEnvironment = {
+export const environment: Environment = {
   apollo: {
-    introspection: process.env.APOLLO_INTROSPECTION === "true",
-    playground: process.env.APOLLO_PLAYGROUND === "true"
+    introspection: process.env.APOLLO_INTROSPECTION === 'true',
+    playground: process.env.APOLLO_PLAYGROUND === 'true',
   },
-  lastfmKey: process.env.LASTFM_API_KEY || "",
+  lastfmKey: process.env.LASTFM_API_KEY || '',
 };

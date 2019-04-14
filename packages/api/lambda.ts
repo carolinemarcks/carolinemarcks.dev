@@ -1,17 +1,17 @@
-import { ApolloServer } from "apollo-server-lambda";
+import { ApolloServer } from 'apollo-server-lambda';
 
-import { environment } from "./environment";
-import resolvers from "./resolvers";
-import typeDefs from "./typeDefs.graphql";
+import { environment } from './environment';
+import resolvers from './resolvers';
+import typeDefs from './typeDefs.graphql';
 
 const server = new ApolloServer({
   introspection: environment.apollo.introspection,
   playground: environment.apollo.playground,
   resolvers,
-  typeDefs
+  typeDefs,
 });
 const f = server.createHandler();
-exports.handler = (e:any,c1:any,c2:any) => {
+exports.handler = (e: any, c1: any, c2: any) => {
   console.log(JSON.stringify(e));
-  return f(e,c1,c2);
-}
+  return f(e, c1, c2);
+};

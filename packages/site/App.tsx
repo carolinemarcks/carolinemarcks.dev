@@ -1,3 +1,4 @@
+/* eslint-env browser */
 import ApolloClient from 'apollo-boost';
 import React from 'react';
 import { ApolloProvider } from 'react-apollo';
@@ -8,13 +9,13 @@ import About from './views/About';
 import Index from './views/Index';
 import Music from './views/Music';
 import NotFound from './views/NotFound';
-import { environment } from "./environment";
+import { environment } from './environment';
 
 require('./static/css/main.scss');
 require('./static/images/ctm-resume.pdf');
 
 const client = new ApolloClient({
-  uri: environment.apiUri
+  uri: environment.apiUri,
 });
 
 const AppRouter = () => (

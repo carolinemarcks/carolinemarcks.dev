@@ -10,10 +10,9 @@ const Index = () => (
         </div>
       </header>
       <p>
-        I&apos;m a backend and api engineer who spends most of her time at work
-        writing and desiging apis, along with the infrastructure to support
-        them. This is my personal site where I feebly venture into the world of
-        web development.
+        I&apos;m a backend and api engineer who spends most of her time at work writing and desiging apis, along with
+        the infrastructure to support them. This is my personal site where I feebly venture into the world of web
+        development.
       </p>
     </article>
   </Main>

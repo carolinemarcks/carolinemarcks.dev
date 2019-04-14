@@ -17,14 +17,14 @@ const Music = () => (
       <TopTracksQuery query={topTracks}>
         {({ loading, error, data }) => {
           if (loading) return <p>Loading...</p>;
-          if (error || !data || !data.user)
+          if (error || !data || !data.user) {
             return (
               <p>
-                Couldn't load my top tracks. Check me out on{' '}
-                <a href="https://www.last.fm/user/cmarcksthespot">last.fm</a>{' '}
-                instead
+                Couldn&apos;t load my top tracks. Check me out on{' '}
+                <a href="https://www.last.fm/user/cmarcksthespot">last.fm</a> instead
               </p>
             );
+          }
           return data.user.topTracks
             .reduce<{ alt: string; src: string }[]>((accum, track) => {
               const image = track.image.find(i => i.size === 'extralarge');

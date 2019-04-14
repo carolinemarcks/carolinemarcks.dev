@@ -9,7 +9,7 @@ export interface Artist {
 }
 
 export interface Image {
-  "#text": string;
+  '#text': string;
   size: string; // TODO consider making enum
 }
 

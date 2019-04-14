@@ -1,7 +1,7 @@
-interface IEnvironment {
+interface Environment {
   apiUri: string;
 }
 
-export const environment: IEnvironment = {
-  apiUri: 'https://' + process.env.DOMAIN_NAME + '/api/graphql',
+export const environment: Environment = {
+  apiUri: `https://${process.env.DOMAIN_NAME}/api/graphql`,
 };
