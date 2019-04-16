@@ -8,7 +8,7 @@ const Header = ({ children }: { children?: JSX.Element }): JSX.Element => (
         <img src="/packages/site/static/images/avatar.png" alt="" />
       </a>
       <h1>
-        Hello! My name is{' '}
+        My name is{' '}
         <strong>
           <Link to="/">Caroline</Link>
         </strong>
