@@ -2,7 +2,8 @@ import React from 'react';
 import { Query, QueryResult } from 'react-apollo';
 import Main from '../components/Main';
 import topTracks from '../queries';
-import { TopTracks, TopTracks_user, TopTracks_user_topTracks_image } from '../generated/TopTracks';
+import { TopTracks, TopTracks_user } from '../generated/TopTracks';
+import Track from '../components/Track';
 
 class TopTracksQuery extends Query<TopTracks> {}
 
@@ -14,19 +15,23 @@ const Error = (): JSX.Element => (
   </p>
 );
 
+const imageSortOrder = ['extralarge', 'large', 'medium', 'small'];
+const imageSort = (a: { size: string }, b: { size: string }): number =>
+  imageSortOrder.indexOf(a.size) - imageSortOrder.indexOf(b.size);
+
 const Tracks = ({ user }: { user: TopTracks_user }): JSX.Element => (
-  <div>
-    {user.topTracks
-      .reduce<{ alt: string; src: string }[]>((accum, track): { alt: string; src: string }[] => {
-        const image = track.image.find((i: TopTracks_user_topTracks_image): boolean => i.size === 'extralarge');
-        if (!image) return accum;
-        return [...accum, { alt: track.name, src: image.url }];
-      }, [])
-      .map(
-        ({ alt, src }): JSX.Element => (
-          <img key={alt} src={src} alt={alt} />
-        ),
-      )}
+  <div className="row" style={{ justifyContent: 'center' }}>
+    {user.topTracks.map(
+      ({ album, url, name, artist }): JSX.Element | null => {
+        const albumImages: string[] = album ? album.image.sort(imageSort).map((i): string => i.url) : [];
+        const images = [
+          ...albumImages.filter((i): boolean => i.length > 0),
+          '/packages/site/static/theme/images/overlay.png',
+        ];
+        const track = { images, url, name, artist: artist.name };
+        return <Track track={track} key={name} />;
+      },
+    )}
   </div>
 );
 

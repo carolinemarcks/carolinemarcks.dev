@@ -5,9 +5,15 @@ const topTracks = gql`
     user(name: "cmarcksthespot") {
       topTracks {
         name
-        image {
-          size
-          url
+        url
+        artist {
+          name
+        }
+        album {
+          image {
+            size
+            url
+          }
         }
       }
     }
