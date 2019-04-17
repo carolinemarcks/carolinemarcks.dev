@@ -24,4 +24,5 @@ export interface Track {
   artist: Artist;
   mbid: string;
   image: Image[];
+  url: string;
 }

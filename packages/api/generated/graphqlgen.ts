@@ -89,6 +89,7 @@ export namespace TrackResolvers {
     name: (parent: Track) => parent.name,
     artist: (parent: Track) => parent.artist,
     image: (parent: Track) => parent.image,
+    url: (parent: Track) => parent.url,
   };
 
   export type NameResolver =
@@ -112,6 +113,13 @@ export namespace TrackResolvers {
         resolve: (parent: Track, args: {}, ctx: Context, info: GraphQLResolveInfo) => Image[] | Promise<Image[]>;
       };
 
+  export type UrlResolver =
+    | ((parent: Track, args: {}, ctx: Context, info: GraphQLResolveInfo) => string | Promise<string>)
+    | {
+        fragment: string;
+        resolve: (parent: Track, args: {}, ctx: Context, info: GraphQLResolveInfo) => string | Promise<string>;
+      };
+
   export interface Type {
     name:
       | ((parent: Track, args: {}, ctx: Context, info: GraphQLResolveInfo) => string | Promise<string>)
@@ -133,11 +141,19 @@ export namespace TrackResolvers {
           fragment: string;
           resolve: (parent: Track, args: {}, ctx: Context, info: GraphQLResolveInfo) => Image[] | Promise<Image[]>;
         };
+
+    url:
+      | ((parent: Track, args: {}, ctx: Context, info: GraphQLResolveInfo) => string | Promise<string>)
+      | {
+          fragment: string;
+          resolve: (parent: Track, args: {}, ctx: Context, info: GraphQLResolveInfo) => string | Promise<string>;
+        };
   }
 }
 
 export namespace ArtistResolvers {
   export const defaultResolvers = {
+    url: (parent: Artist) => parent.url,
     name: (parent: Artist) => parent.name,
   };
 
@@ -155,6 +171,13 @@ export namespace ArtistResolvers {
         resolve: (parent: Artist, args: {}, ctx: Context, info: GraphQLResolveInfo) => Image[] | Promise<Image[]>;
       };
 
+  export type UrlResolver =
+    | ((parent: Artist, args: {}, ctx: Context, info: GraphQLResolveInfo) => string | Promise<string>)
+    | {
+        fragment: string;
+        resolve: (parent: Artist, args: {}, ctx: Context, info: GraphQLResolveInfo) => string | Promise<string>;
+      };
+
   export interface Type {
     name:
       | ((parent: Artist, args: {}, ctx: Context, info: GraphQLResolveInfo) => string | Promise<string>)
@@ -168,6 +191,13 @@ export namespace ArtistResolvers {
       | {
           fragment: string;
           resolve: (parent: Artist, args: {}, ctx: Context, info: GraphQLResolveInfo) => Image[] | Promise<Image[]>;
+        };
+
+    url:
+      | ((parent: Artist, args: {}, ctx: Context, info: GraphQLResolveInfo) => string | Promise<string>)
+      | {
+          fragment: string;
+          resolve: (parent: Artist, args: {}, ctx: Context, info: GraphQLResolveInfo) => string | Promise<string>;
         };
   }
 }

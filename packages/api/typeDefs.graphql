@@ -10,6 +10,7 @@ type User {
 type Artist {
   name: String!
   image: [Image!]!
+  url: String!
 }
 
 type Image {
@@ -21,4 +22,5 @@ type Track {
   name: String!
   artist: Artist!
   image: [Image!]!
+  url: String!
 }
