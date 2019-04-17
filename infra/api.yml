@@ -20,6 +20,7 @@ Resources:
       CodeUri: "../dist/api"
       Handler: lambda.handler
       FunctionName: !Sub '${AWS::StackName}-graph'
+      Timeout: 60
       Environment:
         Variables:
           LASTFM_API_KEY:

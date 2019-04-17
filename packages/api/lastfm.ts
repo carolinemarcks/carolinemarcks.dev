@@ -1,6 +1,6 @@
 import axios from 'axios';
 import environment from './environment';
-import { ArtistDetail, Track } from './models';
+import { ArtistDetail, Track, TrackDetail } from './models';
 
 const { lastfmKey } = environment;
 
@@ -31,7 +31,20 @@ const getTopTracksForUser = (user: string): Promise<Track[]> =>
 const getArtistInfo = (artist: string): Promise<ArtistDetail> =>
   get<{ artist: ArtistDetail }>({ artist, method: 'artist.getInfo' }).then((data): ArtistDetail => data.artist);
 
+const getTrackInfo = ({ trackName, artistName }: { trackName: string; artistName: string }): Promise<TrackDetail> =>
+  get<{ track: TrackDetail }>({ artist: artistName, track: trackName, method: 'track.getInfo' }).then(
+    ({ track }): TrackDetail => {
+      const { album, ...other } = track;
+      if (album) return track;
+      return {
+        ...other,
+        album: null, // make sure artist is _null_ not just undefined
+      };
+    },
+  );
+
 export default {
   getArtistInfo,
   getTopTracksForUser,
+  getTrackInfo,
 };

@@ -19,10 +19,19 @@ export interface ArtistDetail extends Artist {
 
 export interface Track {
   duration: string;
-  playcount: string;
   name: string;
   artist: Artist;
   mbid: string;
   image: Image[];
   url: string;
+}
+
+export interface Album {
+  title: string;
+  url: string;
+  image: Image[];
+}
+
+export interface TrackDetail extends Track {
+  album: Album | null;
 }

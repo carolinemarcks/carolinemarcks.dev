@@ -18,9 +18,16 @@ type Image {
   size: String!
 }
 
+type Album {
+  title: String!
+  image: [Image!]!
+  url: String!
+}
+
 type Track {
   name: String!
   artist: Artist!
   image: [Image!]!
   url: String!
+  album: Album
 }
