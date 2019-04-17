@@ -16,7 +16,7 @@
     "site:schema:download": "apollo schema:download --endpoint=https://carolinemarcks.dev/api/graphql  graphql-schema.json",
     "site:generate": "apollo codegen:generate --localSchemaFile=graphql-schema.json --target=typescript --includes=packages/site/queries.ts --tagName=gql --addTypename --outputFlat ./packages/site/generated",
     "site:build": "webpack --mode production --config webpack.site.config.js",
-    "site:start": "DOMAIN_NAME=http://localhost:3000 webpack-dev-server --mode-development --config webpack.site.config.js",
+    "site:start": "DOMAIN_NAME=http://localhost:3000 webpack-dev-server --mode development --config webpack.site.config.js",
     "site": "yarn site:clean && yarn site:schema:download && yarn site:generate && yarn site:build",
     "lint": "eslint packages/ --ext .js,.jsx,.tsx,.ts"
   },
@@ -67,9 +67,12 @@
     "style-loader": "^0.23.1",
     "ts-loader": "^5.3.3",
     "typescript": "^3.3.4000",
+    "uglifyjs-webpack-plugin": "^2.1.2",
     "webpack": "^4.26.0",
+    "webpack-bundle-analyzer": "^3.3.2",
     "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.2.1"
+    "webpack-dev-server": "^3.2.1",
+    "webpack-mode": "^1.0.1"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.17",
@@ -93,5 +96,8 @@
   },
   "resolutions": {
     "apollo/**/graphql": "14.2.1"
-  }
+  },
+  "sideEffects": [
+    "*.css"
+  ]
 }

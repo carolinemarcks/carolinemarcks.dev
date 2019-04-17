@@ -1,7 +1,17 @@
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
-const CleanWebpackPlugin = require("clean-webpack-plugin");
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const { isProduction } = require('webpack-mode');
+
+const uglify = new UglifyJsPlugin({
+  sourceMap: true,
+  uglifyOptions: {
+    dead_code: true,
+  },
+});
 
 const htmlWebpackPlugin = new HtmlWebPackPlugin({
   favicon: 'packages/site/static/images/favicon.ico',
@@ -10,26 +20,32 @@ const htmlWebpackPlugin = new HtmlWebPackPlugin({
 });
 
 const definePlugin = new webpack.DefinePlugin({
-  'process.env.DOMAIN_NAME': JSON.stringify(process.env.DOMAIN_NAME)
+  'process.env.DOMAIN_NAME': JSON.stringify(process.env.DOMAIN_NAME),
 });
+
+const basePlugins = [new CleanWebpackPlugin(), htmlWebpackPlugin, definePlugin];
+const plugins = isProduction
+  ? [...basePlugins, uglify]
+  : [
+      ...basePlugins,
+      // new BundleAnalyzerPlugin()
+    ];
 
 module.exports = {
   entry: './packages/site/App.tsx',
   output: {
     path: path.resolve(__dirname, 'dist/site'),
-    publicPath: '/'
+    publicPath: '/',
   },
   module: {
     rules: [
       {
         test: /\.css$/,
-        loader:
-          'style-loader!css-loader?modules&localIdentName=[name]---[local]---[hash:base64:5]',
+        loader: 'style-loader!css-loader?modules&localIdentName=[name]---[local]---[hash:base64:5]',
       },
       {
         test: /\.scss$/,
-        loaders:
-          'style-loader!css-loader!sass-loader?modules&localIdentName=[name]---[local]---[hash:base64:5]',
+        loaders: 'style-loader!css-loader!sass-loader?modules&localIdentName=[name]---[local]---[hash:base64:5]',
       },
       {
         // host pdfs at top level
@@ -50,7 +66,7 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
-  plugins: [new CleanWebpackPlugin(), htmlWebpackPlugin, definePlugin],
+  plugins,
   devServer: {
     historyApiFallback: true,
   },

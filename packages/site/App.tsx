@@ -5,8 +5,9 @@ import { ApolloProvider } from 'react-apollo';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faStroopwafel, fas, faEnvelope } from '@fortawesome/free-solid-svg-icons';
-import { fab } from '@fortawesome/free-brands-svg-icons';
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons/faEnvelope';
+import { faGithub } from '@fortawesome/free-brands-svg-icons/faGithub';
+import { faLinkedin } from '@fortawesome/free-brands-svg-icons/faLinkedin';
 import ReactBreakpoints, { Breakpoints } from 'react-breakpoints';
 import Layout from './components/Layout';
 import About from './views/About';
@@ -15,10 +16,11 @@ import Music from './views/Music';
 import NotFound from './views/NotFound';
 import environment from './environment';
 
-library.add(faStroopwafel, fas, fab, faEnvelope);
+library.add(faGithub, faLinkedin, faEnvelope);
 
 require('./static/theme/assets/sass/main.scss');
 require('./static/images/ctm-resume.pdf');
+require('./static/images/avatar.png');
 
 const client = new ApolloClient({
   uri: environment.apiUri,
