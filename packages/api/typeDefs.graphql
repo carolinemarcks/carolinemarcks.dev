@@ -19,7 +19,7 @@ type Image {
 }
 
 type Album {
-  title: String!
+  name: String!
   image: [Image!]!
   url: String!
 }
@@ -27,7 +27,6 @@ type Album {
 type Track {
   name: String!
   artist: Artist!
-  image: [Image!]!
   url: String!
-  album: Album
+  album: Album!
 }

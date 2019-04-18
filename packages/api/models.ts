@@ -27,11 +27,11 @@ export interface Track {
 }
 
 export interface Album {
-  title: string;
+  name: string;
   url: string;
   image: Image[];
 }
 
 export interface TrackDetail extends Track {
-  album: Album | null;
+  album: Album;
 }

@@ -28,10 +28,13 @@ const queryResolvers: QueryResolvers.Type = {
 
 const trackResolvers: TrackResolvers.Type = {
   ...TrackResolvers.defaultResolvers,
-  album: (parent: Track): Promise<Album | null> =>
-    loaders.trackLoader
-      .load({ trackName: parent.name, artistName: parent.artist.name })
-      .then(({ album }): Album | null => album),
+  album: (parent: Track): Promise<Album> =>
+    loaders.trackLoader.load({ trackName: parent.name, artistName: parent.artist.name }).then(
+      ({ album }): Album => ({
+        ...album,
+        name: album.title,
+      }),
+    ),
 };
 
 const albumResolvers = AlbumResolvers.defaultResolvers;
