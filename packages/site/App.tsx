@@ -12,7 +12,7 @@ import ReactBreakpoints, { Breakpoints } from 'react-breakpoints';
 import Layout from './components/Layout';
 import About from './views/About';
 import Index from './views/Index';
-import Music from './views/Music';
+import MusicRouter from './views/MusicRouter';
 import NotFound from './views/NotFound';
 import environment from './environment';
 
@@ -39,7 +39,7 @@ const AppRouter = (): JSX.Element => (
           <Switch>
             <Route path="/" exact component={Index} />
             <Route path="/about/" component={About} />
-            <Route path="/music/" component={Music} />
+            {MusicRouter()}
             <Route component={NotFound} />
           </Switch>
         </Layout>
