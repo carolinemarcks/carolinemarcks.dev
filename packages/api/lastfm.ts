@@ -148,8 +148,31 @@ const getTrackInfo = ({
 }): Promise<{ track: TrackInfo }> =>
   get<{ track: TrackInfo }>({ artist: artistName, track: trackName, method: 'track.getInfo' });
 
+export interface TopArtist {
+  '@attr': {
+    rank: string;
+  };
+  mbid: string;
+  url: string;
+  playcount: string;
+  image: Image[];
+  name: string;
+  streamable: string;
+}
+
+export interface TopArtists {
+  artist: TopArtist[];
+}
+
+const getTopArtists = (user: string): Promise<{ topartists: TopArtists }> =>
+  get<{ topartists: TopArtists }>({
+    method: 'user.getTopArtists',
+    user,
+  });
+
 export default {
   getTrackInfo,
   getTopTracks,
   getArtistInfo,
+  getTopArtists,
 };

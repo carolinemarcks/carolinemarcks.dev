@@ -67,6 +67,13 @@ export namespace UserResolvers {
         resolve: (parent: User, args: {}, ctx: Context, info: GraphQLResolveInfo) => Track[] | Promise<Track[]>;
       };
 
+  export type TopArtistsResolver =
+    | ((parent: User, args: {}, ctx: Context, info: GraphQLResolveInfo) => Artist[] | Promise<Artist[]>)
+    | {
+        fragment: string;
+        resolve: (parent: User, args: {}, ctx: Context, info: GraphQLResolveInfo) => Artist[] | Promise<Artist[]>;
+      };
+
   export interface Type {
     name:
       | ((parent: User, args: {}, ctx: Context, info: GraphQLResolveInfo) => string | Promise<string>)
@@ -80,6 +87,13 @@ export namespace UserResolvers {
       | {
           fragment: string;
           resolve: (parent: User, args: {}, ctx: Context, info: GraphQLResolveInfo) => Track[] | Promise<Track[]>;
+        };
+
+    topArtists:
+      | ((parent: User, args: {}, ctx: Context, info: GraphQLResolveInfo) => Artist[] | Promise<Artist[]>)
+      | {
+          fragment: string;
+          resolve: (parent: User, args: {}, ctx: Context, info: GraphQLResolveInfo) => Artist[] | Promise<Artist[]>;
         };
   }
 }

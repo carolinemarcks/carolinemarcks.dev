@@ -37,11 +37,12 @@ const trackResolvers: TrackResolvers.Type = {
     ),
 };
 
-const albumResolvers = AlbumResolvers.defaultResolvers;
+const albumResolvers: AlbumResolvers.Type = AlbumResolvers.defaultResolvers;
 
-const userResolvers = {
+const userResolvers: UserResolvers.Type = {
   ...UserResolvers.defaultResolvers,
   topTracks: (user: User): Promise<Track[]> => loaders.topTrackLoader.load(user.name),
+  topArtists: (user: User): Promise<Artist[]> => loaders.topArtistsLoader.load(user.name),
 };
 
 export default {

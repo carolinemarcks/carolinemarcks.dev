@@ -1,5 +1,5 @@
 import DataLoader from 'dataloader';
-import lastFm, { ArtistInfo, TrackInfo, TopTrack } from './lastfm';
+import lastFm, { ArtistInfo, TrackInfo, TopTrack, TopArtist } from './lastfm';
 
 const topTrackLoader: DataLoader<string, TopTrack[]> = new DataLoader(
   (usernames: string[]): Promise<TopTrack[][]> =>
@@ -7,6 +7,16 @@ const topTrackLoader: DataLoader<string, TopTrack[]> = new DataLoader(
       usernames.map(
         (username: string): Promise<TopTrack[]> =>
           lastFm.getTopTracks(username).then(({ toptracks }): TopTrack[] => toptracks.track),
+      ),
+    ),
+);
+
+const topArtistsLoader: DataLoader<string, TopArtist[]> = new DataLoader(
+  (usernames: string[]): Promise<TopArtist[][]> =>
+    Promise.all(
+      usernames.map(
+        (username: string): Promise<TopArtist[]> =>
+          lastFm.getTopArtists(username).then(({ topartists }): TopArtist[] => topartists.artist),
       ),
     ),
 );
@@ -30,5 +40,6 @@ const trackLoader: DataLoader<{ trackName: string; artistName: string }, TrackIn
 export default {
   artistLoader,
   topTrackLoader,
+  topArtistsLoader,
   trackLoader,
 };

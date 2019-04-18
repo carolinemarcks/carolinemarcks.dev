@@ -5,6 +5,7 @@ type Query {
 type User {
   name: String!
   topTracks: [Track!]!
+  topArtists: [Artist!]!
 }
 
 type Artist {
