@@ -12,6 +12,7 @@ const get = <T>(params: { [param: string]: string }): Promise<T> =>
       params: {
         api_key: lastfmKey,
         format: 'json',
+        limit: 32,
         ...params,
       },
       url: 'http://ws.audioscrobbler.com/2.0/',
