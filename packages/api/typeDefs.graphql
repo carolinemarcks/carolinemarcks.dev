@@ -6,6 +6,7 @@ type User {
   name: String!
   topTracks: [Track!]!
   topArtists: [Artist!]!
+  topAlbums: [Album!]!
 }
 
 type Artist {

@@ -43,6 +43,7 @@ const userResolvers: UserResolvers.Type = {
   ...UserResolvers.defaultResolvers,
   topTracks: (user: User): Promise<Track[]> => loaders.topTrackLoader.load(user.name),
   topArtists: (user: User): Promise<Artist[]> => loaders.topArtistsLoader.load(user.name),
+  topAlbums: (user: User): Promise<Album[]> => loaders.topAlbumsLoader.load(user.name),
 };
 
 export default {

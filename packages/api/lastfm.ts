@@ -170,9 +170,43 @@ const getTopArtists = (user: string): Promise<{ topartists: TopArtists }> =>
     user,
   });
 
+export interface TopAlbum {
+  artist: {
+    url: string;
+    name: string;
+    mbid: string;
+  };
+  '@attr': {
+    rank: string;
+  };
+  image: Image[];
+  playcount: string;
+  url: string;
+  name: string;
+  mbid: string;
+}
+
+export interface TopAlbums {
+  album: TopAlbum[];
+  '@attr': {
+    page: string;
+    perPage: string;
+    user: string;
+    total: string;
+    totalPages: string;
+  };
+}
+
+const getTopAlbums = (user: string): Promise<{ topalbums: TopAlbums }> =>
+  get<{ topalbums: TopAlbums }>({
+    method: 'user.getTopAlbums',
+    user,
+  });
+
 export default {
   getTrackInfo,
   getTopTracks,
   getArtistInfo,
   getTopArtists,
+  getTopAlbums,
 };

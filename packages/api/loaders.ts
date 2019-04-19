@@ -1,5 +1,5 @@
 import DataLoader from 'dataloader';
-import lastFm, { ArtistInfo, TrackInfo, TopTrack, TopArtist } from './lastfm';
+import lastFm, { ArtistInfo, TrackInfo, TopTrack, TopArtist, TopAlbum } from './lastfm';
 
 const topTrackLoader: DataLoader<string, TopTrack[]> = new DataLoader(
   (usernames: string[]): Promise<TopTrack[][]> =>
@@ -17,6 +17,16 @@ const topArtistsLoader: DataLoader<string, TopArtist[]> = new DataLoader(
       usernames.map(
         (username: string): Promise<TopArtist[]> =>
           lastFm.getTopArtists(username).then(({ topartists }): TopArtist[] => topartists.artist),
+      ),
+    ),
+);
+
+const topAlbumsLoader: DataLoader<string, TopAlbum[]> = new DataLoader(
+  (usernames: string[]): Promise<TopAlbum[][]> =>
+    Promise.all(
+      usernames.map(
+        (username: string): Promise<TopAlbum[]> =>
+          lastFm.getTopAlbums(username).then(({ topalbums }): TopAlbum[] => topalbums.album),
       ),
     ),
 );
@@ -41,5 +51,6 @@ export default {
   artistLoader,
   topTrackLoader,
   topArtistsLoader,
+  topAlbumsLoader,
   trackLoader,
 };
