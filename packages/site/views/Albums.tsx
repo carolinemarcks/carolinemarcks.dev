@@ -2,11 +2,11 @@ import React from 'react';
 import { Query, QueryResult } from 'react-apollo';
 import Main from '../components/Main';
 import queries from '../queries';
-import { TopTracks, TopTracks_user } from '../generated/TopTracks';
+import { TopAlbums, TopAlbums_user } from '../generated/TopAlbums';
 import MusicItem from '../components/MusicItem';
 import MusicHeader from '../components/MusicHeader';
 
-class TopTracksQuery extends Query<TopTracks> {}
+class TopAlbumsQuery extends Query<TopAlbums> {}
 
 const Loading = (): JSX.Element => <p>Loading...</p>;
 const Error = (): JSX.Element => (
@@ -19,13 +19,15 @@ const imageSortOrder = ['extralarge', 'large', 'medium', 'small'];
 const imageSort = (a: { size: string }, b: { size: string }): number =>
   imageSortOrder.indexOf(a.size) - imageSortOrder.indexOf(b.size);
 
-const TrackData = ({ user }: { user: TopTracks_user }): JSX.Element => (
+const AlbumData = ({ user }: { user: TopAlbums_user }): JSX.Element => (
   <div className="row" style={{ justifyContent: 'center' }}>
-    {user.topTracks.map(
-      ({ album, url, name, artist }): JSX.Element | null => {
-        const albumImages: string[] = album ? album.image.sort(imageSort).map((i): string => i.url) : [];
+    {user.topAlbums.map(
+      ({ image, name, artist, url }): JSX.Element | null => {
         const images = [
-          ...albumImages.filter((i): boolean => i.length > 0),
+          ...image
+            .sort(imageSort)
+            .map((i): string => i.url)
+            .filter((i): boolean => i.length > 0),
           '/packages/site/static/theme/images/overlay.png',
         ];
         return <MusicItem images={images} url={url} title={name} subtitle={artist.name} key={name} />;
@@ -34,7 +36,7 @@ const TrackData = ({ user }: { user: TopTracks_user }): JSX.Element => (
   </div>
 );
 
-const Tracks = (): JSX.Element => (
+const Albums = (): JSX.Element => (
   <Main>
     <article className="post" id="index">
       <header>
@@ -42,16 +44,16 @@ const Tracks = (): JSX.Element => (
           <h2>What I&apos;ve been listening to</h2>
         </div>
       </header>
-      <MusicHeader selected="tracks" />
-      <TopTracksQuery query={queries.topTracks}>
-        {({ loading, error, data }: QueryResult<TopTracks>): JSX.Element => {
+      <MusicHeader selected="albums" />
+      <TopAlbumsQuery query={queries.topAlbums}>
+        {({ loading, error, data }: QueryResult<TopAlbums>): JSX.Element => {
           if (loading) return <Loading />;
           if (error || !data || !data.user) return <Error />;
-          return <TrackData user={data.user} />;
+          return <AlbumData user={data.user} />;
         }}
-      </TopTracksQuery>
+      </TopAlbumsQuery>
     </article>
   </Main>
 );
 
-export default Tracks;
+export default Albums;
