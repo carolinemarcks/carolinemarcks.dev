@@ -21,21 +21,41 @@ const topArtistsLoader: DataLoader<string, TopArtist[]> = new DataLoader(
     ),
 );
 
+const artistInfoLoader: DataLoader<string, ArtistInfo> = new DataLoader(
+  (artists: string[]): Promise<ArtistInfo[]> =>
+    Promise.all(
+      artists.map(
+        (artist: string): Promise<ArtistInfo> => lastFm.getArtistInfo(artist).then((res): ArtistInfo => res.artist),
+      ),
+    ),
+);
+
+interface ArtistBase {
+  url: string;
+  name: string;
+  mbid: string;
+}
+
+const artistLoader: DataLoader<string, ArtistBase> = new DataLoader(
+  (artists: string[]): Promise<ArtistBase[]> =>
+    Promise.all(artists.map((artist: string): Promise<ArtistBase> => artistInfoLoader.load(artist))),
+);
+
 const topAlbumsLoader: DataLoader<string, TopAlbum[]> = new DataLoader(
   (usernames: string[]): Promise<TopAlbum[][]> =>
     Promise.all(
       usernames.map(
         (username: string): Promise<TopAlbum[]> =>
-          lastFm.getTopAlbums(username).then(({ topalbums }): TopAlbum[] => topalbums.album),
-      ),
-    ),
-);
-
-const artistLoader: DataLoader<string, ArtistInfo> = new DataLoader(
-  (artists: string[]): Promise<ArtistInfo[]> =>
-    Promise.all(
-      artists.map(
-        (artist: string): Promise<ArtistInfo> => lastFm.getArtistInfo(artist).then((res): ArtistInfo => res.artist),
+          lastFm.getTopAlbums(username).then(
+            ({ topalbums }): TopAlbum[] => {
+              topalbums.album.forEach(
+                (album): void => {
+                  artistLoader.prime(album.artist.name, album.artist);
+                },
+              );
+              return topalbums.album;
+            },
+          ),
       ),
     ),
 );
@@ -48,6 +68,7 @@ const trackLoader: DataLoader<{ trackName: string; artistName: string }, TrackIn
 );
 
 export default {
+  artistInfoLoader,
   artistLoader,
   topTrackLoader,
   topArtistsLoader,

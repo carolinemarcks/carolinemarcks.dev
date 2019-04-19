@@ -22,6 +22,7 @@ type Image {
 
 type Album {
   name: String!
+  artist: Artist!
   image: [Image!]!
   url: String!
 }

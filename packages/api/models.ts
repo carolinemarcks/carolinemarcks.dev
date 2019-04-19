@@ -28,6 +28,7 @@ export interface Track {
 
 export interface Album {
   name: string;
+  artistName: string;
   url: string;
   image: Image[];
 }

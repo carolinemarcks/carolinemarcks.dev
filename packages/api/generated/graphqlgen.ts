@@ -279,6 +279,13 @@ export namespace AlbumResolvers {
         resolve: (parent: Album, args: {}, ctx: Context, info: GraphQLResolveInfo) => string | Promise<string>;
       };
 
+  export type ArtistResolver =
+    | ((parent: Album, args: {}, ctx: Context, info: GraphQLResolveInfo) => Artist | Promise<Artist>)
+    | {
+        fragment: string;
+        resolve: (parent: Album, args: {}, ctx: Context, info: GraphQLResolveInfo) => Artist | Promise<Artist>;
+      };
+
   export type ImageResolver =
     | ((parent: Album, args: {}, ctx: Context, info: GraphQLResolveInfo) => Image[] | Promise<Image[]>)
     | {
@@ -299,6 +306,13 @@ export namespace AlbumResolvers {
       | {
           fragment: string;
           resolve: (parent: Album, args: {}, ctx: Context, info: GraphQLResolveInfo) => string | Promise<string>;
+        };
+
+    artist:
+      | ((parent: Album, args: {}, ctx: Context, info: GraphQLResolveInfo) => Artist | Promise<Artist>)
+      | {
+          fragment: string;
+          resolve: (parent: Album, args: {}, ctx: Context, info: GraphQLResolveInfo) => Artist | Promise<Artist>;
         };
 
     image:

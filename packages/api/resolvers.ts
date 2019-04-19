@@ -12,7 +12,7 @@ import { Artist, Image, Track, User, ArtistDetail, Album } from './models';
 const artistResolvers: ArtistResolvers.Type = {
   ...ArtistResolvers.defaultResolvers,
   image: (parent: Artist): Promise<Image[]> =>
-    loaders.artistLoader.load(parent.name).then((ad: ArtistDetail): Image[] => ad.image),
+    loaders.artistInfoLoader.load(parent.name).then((ad: ArtistDetail): Image[] => ad.image),
 };
 
 const imageResolvers: ImageResolvers.Type = {
@@ -33,17 +33,30 @@ const trackResolvers: TrackResolvers.Type = {
       ({ album }): Album => ({
         ...album,
         name: album.title,
+        artistName: album.artist,
       }),
     ),
 };
 
-const albumResolvers: AlbumResolvers.Type = AlbumResolvers.defaultResolvers;
+const albumResolvers: AlbumResolvers.Type = {
+  ...AlbumResolvers.defaultResolvers,
+  artist: (album: Album): Promise<Artist> => loaders.artistLoader.load(album.artistName),
+};
 
 const userResolvers: UserResolvers.Type = {
   ...UserResolvers.defaultResolvers,
   topTracks: (user: User): Promise<Track[]> => loaders.topTrackLoader.load(user.name),
   topArtists: (user: User): Promise<Artist[]> => loaders.topArtistsLoader.load(user.name),
-  topAlbums: (user: User): Promise<Album[]> => loaders.topAlbumsLoader.load(user.name),
+  topAlbums: (user: User): Promise<Album[]> =>
+    loaders.topAlbumsLoader.load(user.name).then(
+      (albums): Album[] =>
+        albums.map(
+          (album): Album => ({
+            ...album,
+            artistName: album.artist.name,
+          }),
+        ),
+    ),
 };
 
 export default {
