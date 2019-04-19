@@ -1,29 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-
-type MusicCategory = 'tracks' | 'artists' | 'albums';
-
-const CategoryLink = ({ selected, link }: { selected: MusicCategory; link: MusicCategory }): JSX.Element => {
-  const style = selected === link ? { color: '#787878', borderBottom: 'double' } : {};
-  return (
-    <Link to={`/music/${link}`} style={style}>
-      {link}
-    </Link>
-  );
-};
+import MusicLink, { MusicCategory } from './MusicLink';
 
 const MusicHeader = ({ selected }: { selected: MusicCategory }): JSX.Element => (
   <div className="row" style={{ paddingBottom: '20px' }}>
     <div>
-      <CategoryLink selected={selected} link="artists" />
+      <MusicLink.ArtistsLink selected={selected}>artists</MusicLink.ArtistsLink>
     </div>
     <div>|</div>
     <div>
-      <CategoryLink selected={selected} link="albums" />
+      <MusicLink.AlbumsLink selected={selected}>albums</MusicLink.AlbumsLink>
     </div>
     <div>|</div>
     <div>
-      <CategoryLink selected={selected} link="tracks" />
+      <MusicLink.TracksLink selected={selected}>tracks</MusicLink.TracksLink>
     </div>
   </div>
 );

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import MusicLink from './MusicLink';
 
 const Header = ({ children }: { children?: JSX.Element }): JSX.Element => (
   <header id="header">
@@ -16,7 +17,8 @@ const Header = ({ children }: { children?: JSX.Element }): JSX.Element => (
       </h1>
       <br />
       <h1>
-        Find out <Link to="/about">about me</Link>, what I&apos;m <Link to="/music">listening to</Link>, or check out my{' '}
+        Find out <Link to="/about">about me</Link>, what I&apos;m{' '}
+        <MusicLink.ArtistsLink>listening to</MusicLink.ArtistsLink>, or check out my{' '}
         <a href="/ctm-resume.pdf">resume</a>.
       </h1>
     </div>
