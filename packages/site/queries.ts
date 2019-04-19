@@ -38,7 +38,23 @@ const topAlbums = gql`
   }
 `;
 
+const topArtists = gql`
+  query TopArtists {
+    user(name: "cmarcksthespot") {
+      topArtists {
+        name
+        url
+        image {
+          url
+          size
+        }
+      }
+    }
+  }
+`;
+
 export default {
   topTracks,
   topAlbums,
+  topArtists,
 };

@@ -4,7 +4,7 @@ export interface MusicItemProps {
   url: string;
   images: string[];
   title: string;
-  subtitle: string;
+  subtitle?: string;
 }
 
 class MusicItem extends React.Component<MusicItemProps, { images: string[] }> {
@@ -25,10 +25,10 @@ class MusicItem extends React.Component<MusicItemProps, { images: string[] }> {
     return (
       <article className="col-3 col-6-xsmall work-item">
         <a className="image fit thumb" style={{ cursor: 'pointer', outline: '0px' }} href={url}>
-          <img src={image} alt={subtitle} onError={onError} />
+          <img src={image} alt={title} onError={onError} />
         </a>
         <h3>{title}</h3>
-        <p>{subtitle}</p>
+        {subtitle ? <p>{subtitle}</p> : null}
       </article>
     );
   }
