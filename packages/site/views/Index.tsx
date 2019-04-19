@@ -14,7 +14,7 @@ const Index = (): JSX.Element => (
         Because I spend most of my time behind the scenes and not producing or consuming web apis myself, this site was
         built as a personal challenge to learn some technologies that I&apos;m interested in. It&apos;s built with React
         and Typescript, and some components are powered by a GraphQL API. The infrastructure is all managed through AWS
-        AWS via CloudFormation. You can check out the source code{' '}
+        via CloudFormation. You can check out the source code{' '}
         <a href="https://github.com/carolinemarcks/carolinemarcks.dev">here</a>.
       </p>
     </article>
