@@ -71,7 +71,7 @@ __deploy-api: __typecheck
 		--output-template-file dist/packaged-api.yml
 	aws cloudformation deploy \
 		--template-file dist/packaged-api.yml \
-		--stack-name carolinemarcks-api \
+		--stack-name $(API_STACK) \
 		--capabilities CAPABILITY_IAM
 
 deploy-api-prod: __set-prod __deploy-api
