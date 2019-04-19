@@ -1,10 +1,9 @@
 import React from 'react';
 import { Query, QueryResult } from 'react-apollo';
-import Main from '../components/Main';
 import queries from '../queries';
 import { TopTracks, TopTracks_user } from '../generated/TopTracks';
 import MusicItem from '../components/MusicItem';
-import MusicHeader from '../components/MusicHeader';
+import MusicPage from '../components/MusicPage';
 
 class TopTracksQuery extends Query<TopTracks> {}
 
@@ -35,23 +34,15 @@ const TrackData = ({ user }: { user: TopTracks_user }): JSX.Element => (
 );
 
 const Tracks = (): JSX.Element => (
-  <Main>
-    <article className="post" id="index">
-      <header>
-        <div className="title">
-          <h2>What I&apos;ve been listening to</h2>
-        </div>
-      </header>
-      <MusicHeader selected="tracks" />
-      <TopTracksQuery query={queries.topTracks}>
-        {({ loading, error, data }: QueryResult<TopTracks>): JSX.Element => {
-          if (loading) return <Loading />;
-          if (error || !data || !data.user) return <Error />;
-          return <TrackData user={data.user} />;
-        }}
-      </TopTracksQuery>
-    </article>
-  </Main>
+  <MusicPage category="tracks">
+    <TopTracksQuery query={queries.topTracks}>
+      {({ loading, error, data }: QueryResult<TopTracks>): JSX.Element => {
+        if (loading) return <Loading />;
+        if (error || !data || !data.user) return <Error />;
+        return <TrackData user={data.user} />;
+      }}
+    </TopTracksQuery>
+  </MusicPage>
 );
 
 export default Tracks;
