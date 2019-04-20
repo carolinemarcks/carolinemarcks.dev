@@ -16,13 +16,14 @@ const About = (): JSX.Element => (
       <ul>
         <li>
           I was born and raised in Glastonbury, CT. I lived in the same house for 14 years, but haven&apos;t spent more
-          than two years in the same place since.
+          than two years in the same place since. In fact, in the past year, I&apos;ve lived in Boston, Denver, and San
+          Francisco.
         </li>
         <li>
           I was Meetup&apos;s reigning pie eating competition champion for three years running. I know how to scarf down
           a whipped pie like no one else.
         </li>
-        <li>My first aol screen name was PuzzleMasterC. I was a cool kid.</li>
+        <li>My first aol screen name was PuzzleMasterC. Can you tell that I was a cool kid?</li>
         <li>
           Git is one of my favorite pieces of technology. I could talk for hours about the mental model. I have many
           diagrams created in google drawings created while on calls with coworkers talking them through why they should
@@ -37,8 +38,8 @@ const About = (): JSX.Element => (
           meal twice. If I ever decided to leave tech, my dream would be to get into the restaurant business.
         </li>
         <li>
-          A coworker gifted me with the title of &quot;most passionate singer&quot; after a karaoke outing in K-Town.
-          Your girl may not be the most on key, but I&apos;ll make you feel it.
+          A coworker gifted me with the title of &quot;most passionate singer&quot; after a karaoke outing in K-Town. I
+          may not be the most on key, but I&apos;ll certainly make you know how much I love karaoke.
         </li>
         <li>If I had to limit myself to one dance move for the rest of my life, I&apos;d pick shoulder dancing.</li>
       </ul>
