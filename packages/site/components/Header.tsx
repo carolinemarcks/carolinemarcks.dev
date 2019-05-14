@@ -18,8 +18,7 @@ const Header = ({ children }: { children?: JSX.Element }): JSX.Element => (
       <br />
       <h1>
         Find out <Link to="/about">about me</Link>, what I&apos;m{' '}
-        <MusicLink.ArtistsLink>listening to</MusicLink.ArtistsLink>, or check out my{' '}
-        <a href="/ctm-resume.pdf">resume</a>.
+        <MusicLink.AlbumsLink>listening to</MusicLink.AlbumsLink>, or check out my <a href="/ctm-resume.pdf">resume</a>.
       </h1>
     </div>
     {children}
