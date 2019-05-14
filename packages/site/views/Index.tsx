@@ -12,13 +12,13 @@ const Index = (): JSX.Element => (
           simplest solutions to the most complicated problems.
         </p>
         <p>
-          In May of 2019, after almost 5 amazing years, I&apos;ll be moving on from Meetup and looking for a new
-          opportunity. I&apos;ve worn many different hats at Meetup, and I pride myself in my ability to learn quickly
-          and pick up the skills needed for any role. I&apos;m mostly interested in SaaS products — I&apos;ve worked on
-          both platform and product and am now looking for the intersection of them. I have significant experience in
-          backend and API development but am open to full-stack roles as well. If you know of any smart and
-          collaborative teams looking for someone like me,{' '}
-          <a href="https://www.linkedin.com/in/carolinemarcks/">connect with me on LinkedIn</a>.
+          In May of 2019, after almost 5 amazing years, I&apos;ll be moving on from my role at{' '}
+          <a href="https://www.meetup.com/">Meetup</a> and looking for a new opportunity. I&apos;ve worn many different
+          hats at Meetup, and I pride myself in my ability to learn quickly and pick up the skills needed for any role.
+          I&apos;m mostly interested in SaaS products — I&apos;ve worked on both platform and product and am now looking
+          for the intersection of them. I have significant experience in backend and API development but am open to
+          full-stack roles as well. If you know of any smart and collaborative teams looking for someone like me, send
+          me a note <a href="https://www.linkedin.com/in/carolinemarcks/">on LinkedIn</a>.
         </p>
       </article>
     </section>
