@@ -13,6 +13,7 @@ const get = <T>(params: { [param: string]: string }): Promise<T> =>
         api_key: lastfmKey,
         format: 'json',
         limit: 32,
+        period: '6month',
         ...params,
       },
       url: 'http://ws.audioscrobbler.com/2.0/',
@@ -122,7 +123,7 @@ export interface TrackInfo {
     mbid: string;
     url: string;
   };
-  album: {
+  album?: {
     artist: string;
     title: string;
     mbid: string;

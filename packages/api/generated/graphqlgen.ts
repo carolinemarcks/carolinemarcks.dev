@@ -141,10 +141,15 @@ export namespace TrackResolvers {
       };
 
   export type AlbumResolver =
-    | ((parent: Track, args: {}, ctx: Context, info: GraphQLResolveInfo) => Album | Promise<Album>)
+    | ((parent: Track, args: {}, ctx: Context, info: GraphQLResolveInfo) => Album | null | Promise<Album | null>)
     | {
         fragment: string;
-        resolve: (parent: Track, args: {}, ctx: Context, info: GraphQLResolveInfo) => Album | Promise<Album>;
+        resolve: (
+          parent: Track,
+          args: {},
+          ctx: Context,
+          info: GraphQLResolveInfo,
+        ) => Album | null | Promise<Album | null>;
       };
 
   export interface Type {
@@ -170,10 +175,15 @@ export namespace TrackResolvers {
         };
 
     album:
-      | ((parent: Track, args: {}, ctx: Context, info: GraphQLResolveInfo) => Album | Promise<Album>)
+      | ((parent: Track, args: {}, ctx: Context, info: GraphQLResolveInfo) => Album | null | Promise<Album | null>)
       | {
           fragment: string;
-          resolve: (parent: Track, args: {}, ctx: Context, info: GraphQLResolveInfo) => Album | Promise<Album>;
+          resolve: (
+            parent: Track,
+            args: {},
+            ctx: Context,
+            info: GraphQLResolveInfo,
+          ) => Album | null | Promise<Album | null>;
         };
   }
 }

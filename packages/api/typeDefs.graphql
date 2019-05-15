@@ -31,5 +31,5 @@ type Track {
   name: String!
   artist: Artist!
   url: String!
-  album: Album!
+  album: Album
 }
