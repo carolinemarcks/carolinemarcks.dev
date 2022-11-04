@@ -4,11 +4,15 @@ import { withBreakpoints, Breakpoints } from 'react-breakpoints';
 import Header from './Header';
 import Footer from './Footer';
 
-const Layout: React.StatelessComponent<{
+function Layout({
+  breakpoints,
+  currentBreakpoint,
+  children,
+}: {
   breakpoints: Breakpoints;
   currentBreakpoint: keyof Breakpoints;
   children: JSX.Element;
-}> = ({ breakpoints, currentBreakpoint, children }): JSX.Element => {
+}): JSX.Element {
   if (breakpoints[currentBreakpoint] >= breakpoints.large)
     return (
       <div>
@@ -26,5 +30,5 @@ const Layout: React.StatelessComponent<{
       <Footer />
     </div>
   );
-};
+}
 export default withBreakpoints<{ children: JSX.Element }>(Layout);

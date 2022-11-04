@@ -6,7 +6,6 @@ import typeDefs from './typeDefs.graphql';
 
 const server = new ApolloServer({
   introspection: environment.apollo.introspection,
-  playground: environment.apollo.playground,
   resolvers,
   typeDefs,
 });

@@ -1,13 +1,12 @@
 import React, { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { ApolloConsumer } from 'react-apollo';
-import { ApolloClient } from 'apollo-boost';
+import { ApolloConsumer, ApolloClient } from '@apollo/client';
 import { DocumentNode } from 'graphql';
 import queries from '../queries';
 
 export type MusicCategory = 'tracks' | 'artists' | 'albums';
 
-const CategoryLink = ({
+function CategoryLink({
   selected,
   link,
   query,
@@ -17,7 +16,7 @@ const CategoryLink = ({
   link: MusicCategory;
   query: DocumentNode;
   children: ReactNode;
-}): JSX.Element => {
+}): JSX.Element {
   const style = selected && selected === link ? { color: '#787878', borderBottom: 'double' } : {};
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const prefetch = (client: ApolloClient<any>): void => {
@@ -37,29 +36,35 @@ const CategoryLink = ({
       )}
     </ApolloConsumer>
   );
-};
+}
 
 interface MusicLinkProps {
   selected?: MusicCategory;
   children: ReactNode;
 }
-const ArtistsLink = ({ selected, children }: MusicLinkProps): JSX.Element => (
-  <CategoryLink selected={selected} link="artists" query={queries.topArtists}>
-    {children}
-  </CategoryLink>
-);
+function ArtistsLink({ selected, children }: MusicLinkProps): JSX.Element {
+  return (
+    <CategoryLink selected={selected} link="artists" query={queries.topArtists}>
+      {children}
+    </CategoryLink>
+  );
+}
 
-const AlbumsLink = ({ selected, children }: MusicLinkProps): JSX.Element => (
-  <CategoryLink selected={selected} link="albums" query={queries.topAlbums}>
-    {children}
-  </CategoryLink>
-);
+function AlbumsLink({ selected, children }: MusicLinkProps): JSX.Element {
+  return (
+    <CategoryLink selected={selected} link="albums" query={queries.topAlbums}>
+      {children}
+    </CategoryLink>
+  );
+}
 
-const TracksLink = ({ selected, children }: MusicLinkProps): JSX.Element => (
-  <CategoryLink selected={selected} link="tracks" query={queries.topTracks}>
-    {children}
-  </CategoryLink>
-);
+function TracksLink({ selected, children }: MusicLinkProps): JSX.Element {
+  return (
+    <CategoryLink selected={selected} link="tracks" query={queries.topTracks}>
+      {children}
+    </CategoryLink>
+  );
+}
 
 export default {
   ArtistsLink,

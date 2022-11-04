@@ -27,7 +27,7 @@ Resources:
             Ref: LastFmApiKey
           APOLLO_PLAYGROUND: 'true'
           APOLLO_INTROSPECTION: 'true'
-      Runtime: nodejs8.10
+      Runtime: nodejs16.x
       Events:
         Api:
           Type: Api

@@ -1,6 +1,6 @@
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const webpack = require('webpack');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
@@ -41,20 +41,29 @@ module.exports = {
     rules: [
       {
         test: /\.css$/,
-        loader: 'style-loader!css-loader?modules&localIdentName=[name]---[local]---[hash:base64:5]',
+        use: [
+          'style-loader',
+          'css-loader'
+        ],
       },
       {
         test: /\.scss$/,
-        loaders: 'style-loader!css-loader!sass-loader?modules&localIdentName=[name]---[local]---[hash:base64:5]',
-      },
-      {
-        // host pdfs at top level
-        test: /\.pdf(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        loader: 'file-loader?minetype=application/pdf&name=[name].[ext]',
+        use: [
+          'style-loader',
+          'css-loader',
+          'sass-loader'
+        ]
       },
       {
         test: /\.(gif|png|jpe?g|svg)$/,
-        use: 'file-loader?name=[path][name].[ext]',
+        type: 'asset/resource'
+      },
+      {
+        test: /\.pdf(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        type: 'asset/resource',
+        generator: {
+          filename:'[name][ext]'
+        } 
       },
       {
         exclude: /node_modules/,
@@ -70,4 +79,5 @@ module.exports = {
   devServer: {
     historyApiFallback: true,
   },
+  devtool: "source-map"
 };

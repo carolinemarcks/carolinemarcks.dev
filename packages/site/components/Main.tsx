@@ -4,10 +4,12 @@ export interface MainProps {
   children: ReactNode;
 }
 
-const Main = ({ children }: MainProps): JSX.Element => (
-  <div id="wrapper">
-    <div id="main">{children}</div>
-  </div>
-);
+function Main({ children }: MainProps): JSX.Element {
+  return (
+    <div id="wrapper">
+      <div id="main">{children}</div>
+    </div>
+  );
+}
 
 export default Main;

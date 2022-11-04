@@ -29,16 +29,14 @@ const queryResolvers: QueryResolvers.Type = {
 const trackResolvers: TrackResolvers.Type = {
   ...TrackResolvers.defaultResolvers,
   album: (parent: Track): Promise<Album | null> =>
-    loaders.trackLoader.load({ trackName: parent.name, artistName: parent.artist.name }).then(
-      (track): Album | null => {
-        if (!track.album) return null;
-        return {
-          ...track.album,
-          name: track.album.title,
-          artistName: track.album.artist,
-        };
-      },
-    ),
+    loaders.trackLoader.load({ trackName: parent.name, artistName: parent.artist.name }).then((track): Album | null => {
+      if (!track.album) return null;
+      return {
+        ...track.album,
+        name: track.album.title,
+        artistName: track.album.artist,
+      };
+    }),
 };
 
 const albumResolvers: AlbumResolvers.Type = {
@@ -51,14 +49,13 @@ const userResolvers: UserResolvers.Type = {
   topTracks: (user: User): Promise<Track[]> => loaders.topTrackLoader.load(user.name),
   topArtists: (user: User): Promise<Artist[]> => loaders.topArtistsLoader.load(user.name),
   topAlbums: (user: User): Promise<Album[]> =>
-    loaders.topAlbumsLoader.load(user.name).then(
-      (albums): Album[] =>
-        albums.map(
-          (album): Album => ({
-            ...album,
-            artistName: album.artist.name,
-          }),
-        ),
+    loaders.topAlbumsLoader.load(user.name).then((albums): Album[] =>
+      albums.map(
+        (album): Album => ({
+          ...album,
+          artistName: album.artist.name,
+        }),
+      ),
     ),
 };
 

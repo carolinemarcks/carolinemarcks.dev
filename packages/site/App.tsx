@@ -1,29 +1,24 @@
 /* eslint-env browser */
-import ApolloClient from 'apollo-boost';
 import React from 'react';
-import { ApolloProvider } from 'react-apollo';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons/faEnvelope';
-import { faGithub } from '@fortawesome/free-brands-svg-icons/faGithub';
-import { faLinkedin } from '@fortawesome/free-brands-svg-icons/faLinkedin';
 import ReactBreakpoints, { Breakpoints } from 'react-breakpoints';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import Layout from './components/Layout';
 import About from './views/About';
 import Index from './views/Index';
-import MusicRouter from './views/MusicRouter';
 import NotFound from './views/NotFound';
 import environment from './environment';
+import MusicRouter from './views/MusicRouter';
 
-library.add(faGithub, faLinkedin, faEnvelope);
+import './static/theme/assets/sass/main.scss';
 
-require('./static/theme/assets/sass/main.scss');
-require('./static/images/ctm-resume.pdf');
-require('./static/images/avatar.png');
+import './static/images/ctm-resume.pdf';
+import './static/images/avatar.png';
 
 const client = new ApolloClient({
   uri: environment.apiUri,
+  cache: new InMemoryCache(),
 });
 
 const breakpoints: Breakpoints = {
@@ -31,21 +26,23 @@ const breakpoints: Breakpoints = {
   large: 980,
 };
 
-const AppRouter = (): JSX.Element => (
-  <ApolloProvider client={client}>
-    <Router>
-      <ReactBreakpoints breakpoints={breakpoints}>
-        <Layout>
-          <Switch>
-            <Route path="/" exact component={Index} />
-            <Route path="/about/" component={About} />
-            {MusicRouter()}
-            <Route component={NotFound} />
-          </Switch>
-        </Layout>
-      </ReactBreakpoints>
-    </Router>
-  </ApolloProvider>
-);
+function AppRouter(): JSX.Element {
+  return (
+    <ApolloProvider client={client}>
+      <Router>
+        <ReactBreakpoints breakpoints={breakpoints}>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/about/" element={<About />} />
+              {MusicRouter()}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Layout>
+        </ReactBreakpoints>
+      </Router>
+    </ApolloProvider>
+  );
+}
 
 ReactDOM.render(<AppRouter />, document.getElementById('index'));

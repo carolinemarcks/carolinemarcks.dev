@@ -5,10 +5,10 @@ import Albums from './Albums';
 import Artists from './Artists';
 
 const MusicRouter = (): JSX.Element[] => [
-  <Route path="/music" key="/music" component={Albums} exact />,
-  <Route path="/music/tracks" key="/music/tracks" component={Tracks} exact />,
-  <Route path="/music/albums" key="/music/albums" component={Albums} exact />,
-  <Route path="/music/artists" key="/music/artists" component={Artists} exact />,
+  <Route path="/music" key="/music" element={<Albums />} />,
+  <Route path="/music/tracks" key="/music/tracks" element={<Tracks />} />,
+  <Route path="/music/albums" key="/music/albums" element={<Albums />} />,
+  <Route path="/music/artists" key="/music/artists" element={<Artists />} />,
 ];
 
 export default MusicRouter;
