@@ -458,7 +458,7 @@ $size-header-pad: 4em;
 		z-index: -1;
 
 		& + label {
-			@include icon;
+			@include icon(false, solid);
 			color: _palette(fg);
 			cursor: pointer;
 			display: inline-block;
@@ -474,13 +474,14 @@ $size-header-pad: 4em;
 				border: solid 2px transparent;
 				content: '';
 				display: inline-block;
-				height: (_size(element-height) * 0.6);
+				font-size: 0.8em;
+				height: (_size(element-height) * 0.75);
 				left: 0;
-				line-height: (_size(element-height) * 0.575);
+				line-height: (_size(element-height) * 0.675);
 				position: absolute;
 				text-align: center;
 				top: 0;
-				width: (_size(element-height) * 0.6);
+				width: (_size(element-height) * 0.75);
 			}
 		}
 
@@ -566,6 +567,22 @@ $size-header-pad: 4em;
 
 		> .label {
 			display: none;
+		}
+
+		&:before {
+			line-height: inherit;
+		}
+
+		&.solid {
+			&:before {
+				font-weight: 900;
+			}
+		}
+
+		&.brands {
+			&:before {
+				font-family: 'Font Awesome 5 Brands';
+			}
 		}
 	}
 
@@ -1175,7 +1192,7 @@ $size-header-pad: 4em;
 		padding-bottom: 3em;
 
 		.loader {
-			@include icon;
+			@include icon(false, solid);
 			@include vendor('animation', 'spin 1s linear infinite');
 			font-size: 1.5em;
 			height: 1em;
@@ -1207,7 +1224,7 @@ $size-header-pad: 4em;
 
 		.nav-next,
 		.nav-previous {
-			@include icon;
+			@include icon(false, solid);
 			@include vendor('transition', 'opacity #{_duration(transition)} ease-in-out');
 			-webkit-tap-highlight-color: rgba(255,255,255,0);
 			background: rgba(0,0,0,0.01);
@@ -1250,7 +1267,7 @@ $size-header-pad: 4em;
 		}
 
 		.closer {
-			@include icon;
+			@include icon(false, solid);
 			@include vendor('transition', 'opacity #{_duration(transition)} ease-in-out');
 			-webkit-tap-highlight-color: rgba(255,255,255,0);
 			color: #fff;

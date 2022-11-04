@@ -59,7 +59,7 @@ Resources:
       CodeUri: ../dist/edge
       Handler: auth.handler
       Role: !GetAtt LambdaEdgeFunctionRole.Arn
-      Runtime: nodejs8.10
+      Runtime: nodejs16.x
       Timeout: 5
       # More info at https://github.com/awslabs/serverless-application-model/blob/master/docs/safe_lambda_deployments.rst
       AutoPublishAlias: live

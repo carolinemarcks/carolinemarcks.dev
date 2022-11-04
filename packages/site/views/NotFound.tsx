@@ -1,25 +1,22 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import Main from '../components/Main';
 
-interface Location {
-  pathname: string;
-}
+function NotFound(): JSX.Element {
+  const location = useLocation();
 
-export interface NotFoundProps {
-  location: Location;
+  return (
+    <Main>
+      <article className="post" id="index">
+        <div>
+          <p>
+            Whoops! There&apos;s nothing to be found at
+            <code>{location.pathname}</code>
+          </p>
+        </div>
+      </article>
+    </Main>
+  );
 }
-
-const NotFound = ({ location }: NotFoundProps): JSX.Element => (
-  <Main>
-    <article className="post" id="index">
-      <div>
-        <p>
-          Whoops! There&apos;s nothing to be found at
-          <code>{location.pathname}</code>
-        </p>
-      </div>
-    </article>
-  </Main>
-);
 
 export default NotFound;

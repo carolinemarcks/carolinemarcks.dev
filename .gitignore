@@ -1,4 +1,5 @@
+.DS_Store
 node_modules
 dist
 packages/site/generated
-graphql-schema.json
+graphql.schema.json

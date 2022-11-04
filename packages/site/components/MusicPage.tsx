@@ -7,18 +7,20 @@ interface MusicPageProps {
   category: 'tracks' | 'artists' | 'albums';
 }
 
-const MusicPage = ({ children, category }: MusicPageProps): JSX.Element => (
-  <Main>
-    <article className="post" id="index">
-      <header>
-        <div className="title">
-          <h2>What I&apos;ve been listening to</h2>
-        </div>
-      </header>
-      <MusicHeader selected={category} />
-      {children}
-    </article>
-  </Main>
-);
+function MusicPage({ children, category }: MusicPageProps): JSX.Element {
+  return (
+    <Main>
+      <article className="post" id="index">
+        <header>
+          <div className="title">
+            <h2>What I&apos;ve been listening to</h2>
+          </div>
+        </header>
+        <MusicHeader selected={category} />
+        {children}
+      </article>
+    </Main>
+  );
+}
 
 export default MusicPage;
