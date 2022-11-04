@@ -56,7 +56,10 @@ module.exports = {
       },
       {
         test: /\.(gif|png|jpe?g|svg)$/,
-        type: 'asset/resource'
+        type: 'asset/resource',
+        generator: {
+          filename:'[name][ext]'
+        }
       },
       {
         test: /\.pdf(\?v=[0-9]\.[0-9]\.[0-9])?$/,

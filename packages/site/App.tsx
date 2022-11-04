@@ -14,6 +14,7 @@ import MusicRouter from './views/MusicRouter';
 import './static/theme/assets/sass/main.scss';
 
 import './static/images/ctm-resume.pdf';
+import './static/images/lassen.jpeg';
 import './static/images/avatar.png';
 
 const client = new ApolloClient({
